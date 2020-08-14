@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head">
+</head>
+<body>
+    <style>
+        .enrollment-btn{
+            padding: 10px 20px !important;
+            font-size: 14px !important;
+        }
+
+        .enrollment-table-col{
+            display: flex !important;
+            margin: auto !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        .enrollment-table-value-col{
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            moment.locale('ko');
+            $(".start-date-time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLLL');
+            });
+            $(".weekday").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('dddd');
+            });
+            $(".time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LT');
+            });
+            $(".calendar").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").calendar();
+            });
+            $(".date-weekday-time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLLL');
+            });
+        })
+    </script>
+    <nav th:replace="fragments.html :: main-nav"></nav>
+    <div th:replace="fragments.html :: study-banner"></div>
+    <div class="container">
+        <div th:replace="fragments.html :: study-info"></div>
+        <div th:replace="fragments.html :: study-menu(studyMenu='events')"></div>
+
+        <div class="row my-3 mx-3 justify-content-center">
+            <div class="col-10 px-0 row row-cols-1 d-flex">
+                <div th:if="${newEvents.size() == 0}" class="col">
+                        새 모임이 없습니다.
+                    </div>
+                    <table class="table table-striped" height="5-px">
+                            <thead>
+                            <tr>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        NO<i class="fa fa-briefcase col-1 d-flex"></i>
+                                    </div>
+                                </th>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        Date<i class="fa fa-briefcase col-1 d-flex"></i>
+                                    </div>
+                                </th>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        Title
+                                    </div>
+                                </th>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        Teacher
+                                    </div>
+                                </th>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        Theme
+                                    </div>
+                                </th>
+                                <th th:width="10px">
+                                    <div class="enrollment-table-col d-flex">
+                                        Recruitment
+                                    </div>
+                                </th>
+                                <th th:width="20px">
+                                    <div class="enrollment-table-col d-flex">
+                                        <span class="icon property-icon">
+                                        </span> Status
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+
+                        <div class="col-10 d-flex" th:each="event: ${oldEvents}">
+                            <tbody>
+                            <tr>
+                                <td class="cell-title enrollment-table-value-col">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div class="d-flex">
+                                            <a href="#" th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id}}" th:text="${newEvents.indexOf(event)+1}" style="color: black;"><span class="icon">🆕</span></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cell-_Yn^ enrollment-table-value-col">
+                                    <div class="d-flex">
+                                        <div class="start-date-time" th:text="${event.startDateTime}" th:width="10px"></div>
+                                    </div>
+                                </td>
+                                <td class="cell-a[Qe enrollment-table-value-col" th:text="${event.title}" th:width="10px">
+                                    <div class="d-flex">
+                                        <div th:text="${event.title}"></div>
+                                    </div>
+                                </td>
+                                <td class="cell-wsX/ enrollment-table-value-col" th:text="${event.createdBy.getNickname()}" th:width="10px"></td>
+                                <td class="cell-g0qT enrollment-table-value-col" th:width="10px" th:text="${event.theme}"></td>
+                                <td class="fromNow enrollment-table-value-col" th:text="${event.endEnrollmentDateTime}" th:width="10px"></td>
+                                <td class="enrollment-table-value-col" th:if="${event.limitOfEnrollments != 0}" th:width="20px" style="white-space: nowrap">
+                                    <span th:text="${event.limitOfEnrollments}"></span>명 모집 중
+                                    (<span th:text="${event.numberOfRemainSpots()}"></span> 자리 남음)
+                                </td>
+                            </tr>
+                            </tbody>
+                        </div>
+
+                        <div class="col-10 d-flex" th:each="event: ${newEvents}">
+                        <tbody>
+                            <tr>
+                                <td class="cell-title enrollment-table-value-col">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div class="d-flex">
+                                            <a href="#" th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id}}" th:text="${newEvents.indexOf(event)+1}" style="color: black;"><span class="icon">🆕</span></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cell-_Yn^ enrollment-table-value-col">
+                                    <div class="d-flex">
+                                        <div class="start-date-time" th:text="${event.startDateTime}" th:width="10px"></div>
+                                    </div>
+                                </td>
+                                <td class="cell-a[Qe enrollment-table-value-col" th:text="${event.title}" th:width="10px">
+                                    <div class="d-flex">
+                                      <div th:text="${event.title}"></div>
+                                    </div>
+                                </td>
+                                <td class="cell-wsX/ enrollment-table-value-col" th:text="${event.createdBy.getNickname()}" th:width="10px"></td>
+                                <td class="cell-g0qT enrollment-table-value-col" th:width="10px" th:text="${event.theme}"></td>
+                                <td class="fromNow enrollment-table-value-col" th:text="${event.endEnrollmentDateTime}" th:width="10px"></td>
+                                <td class="enrollment-table-value-col" th:if="${event.limitOfEnrollments != 0}" th:width="20px">
+                                    <span th:text="${event.limitOfEnrollments}"></span>명 모집 중
+                                    (<span th:text="${event.numberOfRemainSpots()}"></span> 자리 남음)
+                                </td>
+                            </tr>
+                            </tbody>
+                        </div>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+    <script th:replace="fragments.html :: tooltip"></script>
+    <script th:replace="fragments.html :: date-time"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+    <div th:replace="fragments.html :: study-banner"></div>
+    <div class="container">
+        <div th:replace="fragments.html :: study-info"></div>
+        <div th:replace="fragments.html :: study-menu(studyMenu='members')"></div>
+
+        <div th:replace="fragments.html :: member-list(members=${study.managers},isManager=${true})"></div>
+        <div th:replace="fragments.html :: member-list(members=${study.members},isManager=${false})"></div>
+
+        <!-- seungho -->
+        <!-- ICON SDK for Javascript -->
+        <script src="https://cdn.jsdelivr.net/gh/icon-project/icon-sdk-js@latest/build/icon-sdk-js.min.js"></script>
+        <script th:inline="javascript">
+
+            document.getElementById("memberDeposit").onmousemove = function() {
+                if ([[${!study.closed}]]) {
+                    let parsedMember = JSON.parse(getMemberDepositForm());
+                    window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                        detail: {
+                            type: 'REQUEST_JSON-RPC',
+                            payload: parsedMember
+                        }
+                    }));
+                    let parsedCommon = JSON.parse(getCommonDepositForm());
+                    window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                        detail: {
+                            type: 'REQUEST_JSON-RPC',
+                            payload: parsedCommon
+                        }
+                    }));
+                }
+                else {
+                    let parsed = JSON.parse(getPayBackDepositForm());
+                    window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                        detail: {
+                            type: 'REQUEST_JSON-RPC',
+                            payload: parsed
+                        }
+                    }));
+                }
+            }
+
+            let iconServiceInMemberList = window['icon-sdk-js'];
+            let IconAmountInMemberList = iconServiceInMemberList.IconAmount;
+            let IconConverterInMemberList = iconServiceInMemberList.IconConverter;
+            let IconBuilderInMemberList = iconServiceInMemberList.IconBuilder;
+
+            let requestScoreInMemberList;
+            let fromAddressInMemberList;
+            let flagInMemberList;
+            let memberDepositInMemberList;
+            let commonDepositInMemberList;
+            let payBackDepositInMemberList;
+
+            if ([[${study.closed}]]) { requestScoreInMemberList = document.getElementById("requestPayBack"); }
+
+            if (requestScoreInMemberList != null) {
+                requestScoreInMemberList.onclick = function() {
+                    if (fromAddressInMemberList == null) { getAddressInMemberList(); }
+                    else { callScoreInMemberList(); }
+                }
+            }
+
+            window.addEventListener("ICONEX_RELAY_RESPONSE", eventHandlerInMemberList, false);
+
+            function getAddressInMemberList() {
+                window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                    detail: {
+                        type: 'REQUEST_ADDRESS'
+                    }
+                }));
+            }
+
+            function callScoreInMemberList() {
+                let parsed;
+                parsed = JSON.parse(setPayBackStudyForm());
+                window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                    detail: {
+                        type: 'REQUEST_JSON-RPC',
+                        payload: parsed
+                    }
+                }));
+            }
+
+            function setPayBackStudyForm() {
+                let callTransactionBuilder = new IconBuilderInMemberList.CallTransactionBuilder;
+                let callTransactionData = callTransactionBuilder
+                    .version(IconConverterInMemberList.toBigNumber(3))
+                    .from(fromAddressInMemberList)
+                    .to([[${study.scoreAddress}]])
+                    .stepLimit(IconConverterInMemberList.toBigNumber(1000000))
+                    .timestamp((new Date()).getTime() * 1000)
+                    .nid(IconConverterInMemberList.toBigNumber(3))
+                    .method('payBackDeposit')
+                    .params({
+                        "_accountId": IconConverterInMemberList.toHex([[${account.id}]])
+                    })
+                    .build();
+                let scoreData = JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "method": "icx_sendTransaction",
+                    "params": IconConverterInMemberList.toRawTransaction(callTransactionData),
+                    "id": 1234
+                });
+                return scoreData;
+            }
+
+            function getMemberDepositForm() {
+                let callBuilder = new IconBuilderInMemberList.CallBuilder;
+                let readOnlyData = callBuilder
+                    .from("hxde6c30f9ac968f637c4bfea0d13ce5177f02ed7e")
+                    .to([[${study.scoreAddress}]])
+                    .method('getMemberDepositInfo')
+                    .params({
+                        "_accountId": IconConverterInMemberList.toHex([[${account.id}]])
+                    })
+                    .build();
+                let scoreData = JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "method": "icx_call",
+                    "params": readOnlyData,
+                    "id": 4320
+                });
+                return scoreData;
+            }
+
+            function getCommonDepositForm() {
+                let callBuilder = new IconBuilderInMemberList.CallBuilder;
+                let readOnlyData = callBuilder
+                    .from("hxde6c30f9ac968f637c4bfea0d13ce5177f02ed7e")
+                    .to([[${study.scoreAddress}]])
+                    .method("getCommonDepositInfo")
+                    .build();
+                let scoreData = JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "method": "icx_call",
+                    "params": readOnlyData,
+                    "id": 4321
+                });
+                return scoreData;
+            }
+
+            function getPayBackDepositForm() {
+                let callBuilder = new IconBuilderInMemberList.CallBuilder;
+                let readOnlyData = callBuilder
+                    .from("hxde6c30f9ac968f637c4bfea0d13ce5177f02ed7e")
+                    .to([[${study.scoreAddress}]])
+                    .method('getPayBackDepositInfo')
+                    .params({
+                        "_accountId": IconConverterInMemberList.toHex([[${account.id}]])
+                    })
+                    .build();
+                let scoreData = JSON.stringify({
+                    "jsonrpc": "2.0",
+                    "method": "icx_call",
+                    "params": readOnlyData,
+                    "id": 4322
+                });
+                return scoreData;
+            }
+
+            function eventHandlerInMemberList(event) {
+                let type = event.detail.type;
+                let payload = event.detail.payload;
+                switch (type) {
+                    case "RESPONSE_ADDRESS":
+                        fromAddressInMemberList = payload;
+                        break;
+                    case "RESPONSE_JSON-RPC":
+                        if (payload.id === 1234) {
+                            document.getElementById("payBack").click();
+                        }
+                        else if (payload.id === 4322) {
+                            payBackDepositInMemberList = parseInt(payload.result, 16) / (10 ** 18);
+                            $("#memberDeposit").popover({
+                                "content": "환급 예정 보증금은 " + payBackDepositInMemberList + " ICX 입니다."
+                            });
+                        }
+                        else if (flagInMemberList === 1) {
+                            $("#memberDeposit").popover({
+                                "content": "스터디 공통 보증금은 " + commonDepositInMemberList + " ICX 이고,<br/>나의 보증금은 " + memberDepositInMemberList + " ICX 입니다."
+                            });
+                        }
+                        else if (payload.id === 4320) {
+                            console.log(payload);
+                            memberDepositInMemberList = parseInt(payload.result, 16) / (10 ** 18);
+                        }
+                        else if (payload.id === 4321) {
+                            commonDepositInMemberList = parseInt(payload.result, 16) / (10 ** 18);
+                            flagInMemberList = 1;
+                        }
+                        else { console.log("432x"); }
+                        break;
+                    default:
+                }
+            }
+        </script>
+        <!-- seungho -->
+
+        <div th:replace="fragments.html :: footer"></div>
+    </div>
+    <script th:replace="fragments.html :: tooltip"></script>
+</body>
+</html>

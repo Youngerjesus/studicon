@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head">
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        width : 10px;
+        text-align: left;
+        padding: 8px;
+    }
+    tr:nth-child(even) {background-color: #f2f2f2;}
+</style>
+<body>
+    <nav th:replace="fragments.html :: main-nav"></nav>
+    <div th:replace="fragments.html :: study-banner"></div>
+    <style>
+        .enrollment-detail-col{
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        .enrollment-detail-column{
+            font-weight: bold;
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+
+        .enrollment-detail-value{
+
+        }
+
+        .enrollment-detail-box{
+            margin-left: 20px;
+            height: 50px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+    </style>
+    <div class="container">
+        <div class="row py-4 text-left justify-content-center bg-light">
+            <div class="col-6">
+                <span class="h2">
+                <a href="#" class="text-decoration-none" th:href="@{'/study/' + ${study.path}}">
+                    <span th:text="${study.title}">스터디 이름</span>
+                </a> </span>
+            </div>
+
+            <div class="col-4 text-right justify-content-end">
+                <span sec:authorize="isAuthenticated()">
+                    <button th:if="${event.isEnrollableFor(#authentication.principal)}"
+                            class="btn btn-outline-primary" data-toggle="modal" data-target="#enroll">
+                        <i class="fa fa-plus-circle"></i> 참가 신청
+                    </button>
+                    <button th:if="${event.isDisenrollableFor(#authentication.principal)}"
+                            class="btn btn-outline-primary" data-toggle="modal" data-target="#disenroll">
+                        <i class="fa fa-minus-circle"></i> 참가 신청 취소
+                    </button>
+                    <span class="text-success" th:if="${event.isAttended(#authentication.principal)}" disabled>
+                        <i class="fa fa-check-circle"></i> 참석 완료
+                    </span>
+                </span>
+            </div>
+
+<!--            th:each="votedItem: ${enroll.votedItems}"-->
+            <div th:each="enroll: ${event.enrollments}">
+                <div th:each="votedItem: ${enroll.votedItems}">
+                    <div class="modal fade" th:id="attendance-voting+${votedItem.id}" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="attendanceVotingTitle" th:text="${event.title}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+<!--                                /study/{path}/events/{eventId}/complete-voting/{votingItemId}-->
+
+                                <div class="modal-body">
+                                    <p th:text="${votedItem.question}"></p>
+                                    <form class="needs-validation col-sm-10"
+                                          th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/complete-voting/' + ${votedItem.id}}"
+                                          th:object="${votingItemForm}" method="post" novalidate>
+                                        <div>
+                                            <label><input type="checkbox" name="answer" th:value="yes" th:field="*{yes}">Yes</label>
+                                            <label><input type="checkbox" name="answer" th:value="no" th:field="*{no}">No</label>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                            <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:each="enroll: ${event.enrollments}">
+                <div th:each="votedItem: ${enroll.votedItems}">
+                    <div class="modal fade" th:id="assignment-voting+${votedItem.id}" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="assignmentVotingTitle" th:text="${event.title}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <!--                                /study/{path}/events/{eventId}/complete-voting/{votingItemId}-->
+
+                                <div class="modal-body">
+                                    <p th:text="${votedItem.question}"></p>
+                                    <form class="needs-validation col-sm-10"
+                                          th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/complete-voting/' + ${votedItem.id}}"
+                                          th:object="${votingItemForm}" method="post" novalidate>
+                                        <div>
+                                            <label><input type="checkbox" name="answer" th:value="yes" th:field="*{yes}">Yes</label>
+                                            <label><input type="checkbox" name="answer" th:value="no" th:field="*{no}">No</label>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                            <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="attendance" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="attendanceTitle" th:text="${event.title}"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>출석 투표를 만드시겠습니까?</p>
+                            <form class="needs-validation col-sm-10"
+                                  th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/new-voting'}"
+                                  th:object="${votingForm}" method="post" novalidate>
+                                <input id="attendance-type" class="form-control" type="text" th:field="*{type}" hidden>
+                                <script type="text/javascript">
+                                    document.getElementById("attendance-type").value = "attendance";
+                                    document.getElementById("assignment-type").value = "assignment";
+                                </script>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="createdVotingDateTime">투표 시작 일시</label>
+                                        <input id="createdVotingDateTime" type="datetime-local" th:field="*{createdVotingDateTime}" class="form-control"
+                                               aria-describedby="createdVotingDateTimeHelp" required>
+                                        <small id="createdVotingDateTimeHelp" class="form-text text-muted">
+                                            지난 시간은 투표 시작 일시로 설정할 수 없습니다.
+                                        </small>
+                                        <small class="invalid-feedback">투표 시작 일시를 입력하세요.</small>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('createdVotingDateTime')}" th:errors="*{createdVotingDateTime}">Error</small>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endVotingDateTime">투표 마감 일시</label>
+                                        <input id="endVotingDateTime" type="datetime-local" th:field="*{endVotingDateTime}" class="form-control"
+                                               aria-describedby="endVotingDateTimeHelp" required>
+                                        <small id="endVotingDateTimeHelp" class="form-text text-muted">
+                                            투표 마감 일시는 투표 시작 일시 이후여야 설정할 수 있습니다.
+                                        </small>
+                                        <small class="invalid-feedback">투표 마감 일시를 입력하세요.</small>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('endVotingDateTime')}" th:errors="*{endVotingDateTime}">Error</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                    <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="assignment" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="assignmentTitle" th:text="${event.title}"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>과제 투표를 만드시겠습니까?</p>
+                            <form class="needs-validation col-sm-10"
+                                  th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/new-voting'}"
+                                  th:object="${votingForm}" method="post" novalidate>
+                                <input id="assignment-type" class="form-control" type="text" th:field="*{type}" hidden>
+                                <script type="text/javascript">
+                                    document.getElementById("attendance-type").value = "attendance";
+                                    document.getElementById("assignment-type").value = "assignment";
+                                </script>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="createdVotingDateTime">투표 시작 일시</label>
+                                        <input id="createdVotingDateTime2" type="datetime-local" th:field="*{createdVotingDateTime}" class="form-control"
+                                               aria-describedby="createdVotingDateTimeHelp" required>
+                                        <small id="createdVotingDateTime2Help" class="form-text text-muted">
+                                            지난 시간은 투표 시작 일시로 설정할 수 없습니다.
+                                        </small>
+                                        <small class="invalid-feedback">투표 시작 일시를 입력하세요.</small>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('createdVotingDateTime')}" th:errors="*{createdVotingDateTime}">Error</small>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endVotingDateTime">투표 마감 일시</label>
+                                        <input id="endVotingDateTime2" type="datetime-local" th:field="*{endVotingDateTime}" class="form-control"
+                                               aria-describedby="endVotingDateTimeHelp" required>
+                                        <small id="endVotingDateTime2Help" class="form-text text-muted">
+                                            투표 마감 일시는 투표 시작 일시 이후여야 설정할 수 있습니다.
+                                        </small>
+                                        <small class="invalid-feedback">투표 마감 일시를 입력하세요.</small>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('endVotingDateTime')}" th:errors="*{endVotingDateTime}">Error</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                    <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="disenroll" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="leaveTitle" th:text="${event.title}"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>모임 참가 신청을 취소하시겠습니까?</p>
+                            <p><strong>확인</strong>하시면 본 참가 신청을 취소하고 다른 대기자에게 참석 기회를 줍니다.</p>
+                            <p>감사합니다.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <form th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/disenroll'}" method="post">
+                                <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="enroll" tabindex="-1" role="dialog" aria-labelledby="enrollmentTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="enrollmentTitle" th:text="${event.title}"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>모임에 참석하시겠습니까? 일정을 캘린더에 등록해 두시면 좋습니다.</p>
+                            <p><strong>확인</strong> 버튼을 클릭하면 모임 참가 신청을 합니다.</p>
+                            <p>감사합니다.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <form th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enroll'}" method="post">
+                                <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row px-3 justify-content-center">
+            <div class="col-8 pt-3" th:background="bg-gray">
+                    <!-- 수정부분-->
+                    <h2 th:text="${event.title}" style="font-size:40px;"></h2>
+
+                    <div class="pt-3 text-left d-flex" style="flex-direction: column;">
+                        <div class="font-weight-light d-flex enrollment-detail-box" style="flex-direction: row; background-color: #f2f2f2">
+                            <div class="d-flex enrollment-detail-column">모집 방법: </div>
+                            <div class="d-flex">
+                                <span th:if="${event.eventType == T(com.studyolle.modules.event.EventType).FCFS}">선착순</span>
+                                <span th:if="${event.eventType == T(com.studyolle.modules.event.EventType).CONFIRMATIVE}">관리자 확인</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light">
+                            <div class="d-flex enrollment-detail-column">모집 인원: </div>
+                            <div class="d-flex">
+                                <span th:text="${event.limitOfEnrollments}"></span>명
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light" style="background-color: #f2f2f2">
+                            <div class="d-flex enrollment-detail-column">참가 신청 마감 일시: </div>
+                            <div class="d-flex">
+                                <div class="enrollment-detail-col">
+                                    <span class="date" th:text="${event.endEnrollmentDateTime}"></span>
+                                    <span class="weekday" th:text="${event.endEnrollmentDateTime}"></span>
+                                    <span class="time" th:text="${event.endEnrollmentDateTime}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light">
+                            <div class="d-flex enrollment-detail-column" >모임일시:</div>
+                            <div class="d-flex">
+                                <div class="enrollment-detail-col">
+                                    <span class="date" th:text="${event.startDateTime}"></span>
+                                    <span class="weekday" th:text="${event.startDateTime}"></span>
+                                    <span class="time" th:text="${event.startDateTime}"></span> -
+                                    <span class="time" th:text="${event.endDateTime}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light" style="background-color: #f2f2f2">
+                            <div class="d-flex enrollment-detail-column">모임장: </div>
+                            <div class="d-flex">
+                                <a th:href="@{'/profile/' + ${event.createdBy?.nickname}}" class="text-decoration-none">
+                                    <svg th:if="${#strings.isEmpty(event.createdBy?.profileImage)}"
+                                         th:data-jdenticon-value="${event.createdBy?.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
+                                    <img th:if="${!#strings.isEmpty(event.createdBy?.profileImage)}"
+                                         th:src="${event.createdBy?.profileImage}" width="24" height="24" class="rounded border"/>
+                                    <span th:text="${event.createdBy?.nickname}"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light">
+                            <div class="d-flex enrollment-detail-column">투표: </div>
+                            <div class="d-flex">
+                                <button class=" btn btn-outline-primary btn-sm my-1" data-toggle="modal" data-target="#attendance">출석</button>
+                                <button class=" btn btn-outline-primary btn-sm my-1" data-toggle="modal" data-target="#assignment" style="margin-left: 10px;">과제</button>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light" style="background-color: #f2f2f2">
+                            <div class="d-flex enrollment-detail-column">결석자: </div>
+                            <div class="d-flex" th:each="enroll: ${event.enrollments}">
+                                <span th:if="${!enroll.attended}" th:text="${enroll.account.nickname}" style="margin-left: 20px;">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row enrollment-detail-box font-weight-light">
+                            <div class="d-flex enrollment-detail-column">
+                                <div class="d-flex">과제 미제출자: </div>
+                                <div th:each="enroll: ${event.enrollments}">
+                                    <span th:if="${!enroll.assignment}" th:text="${enroll.account.nickname}" style="margin-left: 20px;">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${study.isManager(#authentication.principal)}" class="d-flex flex-row enrollment-detail-box font-weight-light" style="background-color: #f2f2f2">
+                            <div class="d-flex" style="font-weight: bold; margin-left: 20px;">모임 관리: </div>
+                            <div class="d-flex flex-row" th:if="${study.isManager(#authentication.principal)}">
+                                <div class="d-flex" style="margin-left: 20px;">
+                                    <button class="btn btn-outline-primary btn-sm my-1" style="margin-left: 20px;"
+                                       th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/edit'}" >
+                                        모임 수정
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm my-1" data-toggle="modal" data-target="#cancel" style="margin-left: 10px;">
+                                        모임 취소
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <br>
+                <br>
+                <dt class="h4">상세 모임 설명</dt>
+                <dd th:utext="${event.description}"></dd>
+
+                <dt class="h4">모임 참가 인원 (<span th:text="${event.enrollments.size()}"></span>)</dt>
+                <dd>
+
+                <table class="properties" th:if="${event.enrollments.size() > 0}">
+                    <tr>
+                        <th scope="col" style="white-space: nowrap">#</th>
+                        <th scope="col" style="white-space: nowrap">참석자</th>
+                        <th scope="col" style="white-space: nowrap">참가 신청 일시</th>
+                        <th scope="col" style="white-space: nowrap">참가 상태</th>
+                        <th th:if="${event.isCreator(#authentication.principal)}" scope="col" style="white-space: nowrap">
+                            참가 신청 관리
+                        </th>
+                        <th scope="col" style="white-space: nowrap">
+                            출석 체크
+                        </th>
+                        <th scope="col" style="white-space: nowrap">
+                            과제 체크
+                        </th>
+                    </tr>
+                    </thead>
+                        <tbody>
+                            <tr th:each="enroll: ${event.enrollments}">
+                                <th scope="row" th:text="${enrollStat.count}"></th>
+                                <td>
+                                    <a th:href="@{'/profile/' + ${enroll.account.nickname}}"
+                                       class="text-decoration-none">
+                                        <svg th:if="${#strings.isEmpty(enroll.account?.profileImage)}" data-jdenticon-value="nickname"
+                                             th:data-jdenticon-value="${enroll.account.nickname}" width="24" height="24" class="rounded border bg-light"></svg>
+                                        <img th:if="${!#strings.isEmpty(enroll.account?.profileImage)}"
+                                             th:src="${enroll.account?.profileImage}" width="24" height="24" class="rounded border"/>
+                                        <span th:text="${enroll.account.nickname}"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="date-time" th:text="${enroll.enrolledAt}"></span>
+                                </td>
+                                <td>
+                                    <span th:if="${enroll.accepted}">확정</span>
+                                    <span th:if="${!enroll.accepted}">대기중</span>
+                                </td>
+                                <td>
+                                   <div th:each="votedItem: ${enroll.votedItems}">
+                                       <div th:if="${votedItem.voting.type == 'attendance' && votedItem.votingEnrollment.account == account && votedItem.getState() == 'incomplete'}">
+                                           <button class="btn btn-outline-primary btn-sm my-1" data-toggle="modal" th:attr="data-target='#attendance-voting'+${votedItem.id}"> 출석 투표 </button>
+                                       </div>
+                                       <div th:if="${votedItem.voting.type == 'attendance' && votedItem.votingEnrollment.account == account && votedItem.getState() == 'complete'}">
+                                           <i class="fa fa-check-circle" aria-hidden="true" style="color: #38c172"></i>
+                                       </div>
+                                   </div>
+                                </td>
+                                <td>
+                                    <div th:each="votedItem: ${enroll.votedItems}">
+                                        <div th:if="${votedItem.voting.type == 'assignment' && votedItem.votingEnrollment.account == account && votedItem.getState() == 'incomplete'}">
+                                            <button class="btn btn-outline-primary btn-sm my-1" data-toggle="modal" th:attr="data-target='#assignment-voting'+${votedItem.id}"> 과제 투표 </button>
+                                        </div>
+                                        <div th:if="${votedItem.voting.type == 'assignment' && votedItem.votingEnrollment.account == account && votedItem.getState() == 'complete'}">
+                                            <i class="fa fa-check-circle" aria-hidden="true" style="color: #38c172"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:if="${event.isCreator(#authentication.principal)}">
+                                    <a th:if="${event.canAccept(enroll)}" href="#" class="text-decoration-none"
+                                       th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enrollments/' + ${enroll.id} + '/accept'}" >신청 수락</a>
+                                    <a th:if="${event.canReject(enroll)}" href="#" class="text-decoration-none"
+                                       th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enrollments/' + ${enroll.id} + '/reject'}">취소</a>
+                                </td>
+                                <td th:if="${event.isCreator(#authentication.principal)}">
+                                    <a th:if="${enroll.accepted && !enroll.attended}" href="#" class="text-decoration-none"
+                                       th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enrollments/' + ${enroll.id} + '/checkin'}">체크인</a>
+                                    <a th:if="${enroll.accepted && enroll.attended}" href="#" class="text-decoration-none"
+                                       th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enrollments/' + ${enroll.id} + '/cancel-checkin'}">체크인 취소</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </dd>
+            </div>
+
+            <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="cancelTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelTitle" th:text="${event.title}"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>모임을 취소 하시겠습니까?</p>
+                            <p><strong>확인</strong>하시면 본 모임 및 참가 신청 관련 데이터를 삭제합니다.</p>
+                            <p>감사합니다.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <form th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id}}" th:method="delete">
+                                <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments.html :: footer"></div>
+    </div>
+    <script th:replace="fragments.html :: date-time"></script>
+</body>
+</html>

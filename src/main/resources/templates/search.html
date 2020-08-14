@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+    <div class="d-flex">
+        <div class="d-flex" style="width: 15%; background-color: currentColor;">
+            <a href="http://www.skkrypto.com/">
+                <img  src="/images/skkrypto.png" width="90%" height="90%" style="display: flex; margin-left: auto; margin-right: auto; cursor: pointer;">
+            </a>
+        </div>
+        <div class="fluid flex-fill pt-3 px-3 pt-md-4 px-md-4 d-flex" style="width: 85%;">
+            <div class="d-flex" style="width: 80%; flex-direction: column; margin-left: auto; margin-right: auto;">
+                <div class="d-flex">
+                    <p class="lead" th:if="${studyPage.getTotalElements() == 0}" style="color: #3e3a39; font-size: 25px; font-weight: 900;">
+                        <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 스터디가 없습니다.
+                    </p>
+                    <p class="lead" th:if="${studyPage.getTotalElements() > 0}" style="color: #3e3a39; font-size: 25px; font-weight: 900;">
+                        <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 스터디를
+                        <span th:text="${studyPage.getTotalElements()}"></span>개
+                        찾았습니다.
+                    </p>
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            검색 결과 정렬 방식
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" th:classappend="${#strings.equals(sortProperty, 'publishedDateTime')}? active"
+                               th:href="@{'/search/study?sort=publishedDateTime,desc&keyword=' + ${keyword}}" style="background-color: #17a2b8;">
+                                스터디 공개일
+                            </a>
+                            <a class="dropdown-item" th:classappend="${#strings.equals(sortProperty, 'memberCount')}? active"
+                               th:href="@{'/search/study?sort=memberCount,desc&keyword=' + ${keyword}}" style="background-color: #17a2b8;">
+                                멤버수
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center d-flex">
+                    <div th:replace="fragments.html :: study-list (studyList=${studyPage.getContent()})"></div>
+                </div>
+                <div class="row justify-content-center d-flex" style="margin-top: 20px;">
+                    <div class="d-flex">
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${!studyPage.hasPrevious()}? disabled">
+                                    <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${studyPage.getNumber() - 1}}"
+                                       class="page-link" tabindex="-1" aria-disabled="true" >
+                                        이전
+                                    </a>
+                                </li>
+                                <li class="page-item" th:classappend="${i == studyPage.getNumber()}? active"
+                                    th:each="i: ${#numbers.sequence(0, studyPage.getTotalPages() - 1)}">
+                                    <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${i}}"
+                                       class="page-link" href="#" th:text="${i + 1}" style="background-color: #17a2b8; border-color: #17a2b8;">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${!studyPage.hasNext()}? disabled">
+                                    <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${studyPage.getNumber() + 1}}"
+                                       class="page-link">
+                                        다음
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+    <script th:replace="fragments.html :: date-time"></script>
+    <script src="/node_modules/mark.js/dist/jquery.mark.min.js"></script>
+    <script type="application/javascript">
+        $(function(){
+            var mark = function() {
+                // Read the keyword
+                var keyword = $("#keyword").text();
+
+                // Determine selected options
+                var options = {
+                    "each": function(element) {
+                        setTimeout(function() {
+                            $(element).addClass("animate");
+                        }, 150);
+                    }
+                };
+
+                // Mark the keyword inside the context
+                $(".context").unmark({
+                    done: function() {
+                        $(".context").mark(keyword, options);
+                    }
+                });
+            };
+
+            mark();
+        });
+    </script>
+</body>
+</html>

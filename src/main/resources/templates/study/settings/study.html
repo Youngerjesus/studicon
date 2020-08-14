@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div th:replace="fragments.html :: study-banner"></div>
+<div class="container">
+    <div th:replace="fragments.html :: study-info"></div>
+    <div th:replace="fragments.html :: study-menu(studyMenu='settings')"></div>
+    <div class="row mt-3 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: study-settings-menu(currentMenu='study')"></div>
+        </div>
+        <!-- seungho -->
+        <div class="col-8" th:if="${study.scoreAddress != null}">
+        <!-- seungho -->
+
+            <div th:replace="fragments.html :: message"></div>
+            <div class="row">
+                <h5 class="col-sm-12">스터디 공개 및 종료</h5>
+                <form th:if="${!study.published && !study.closed}" class="col-sm-12" action="#" th:action="@{'/study/' + ${study.getPath()} + '/settings/study/publish'}" method="post" novalidate>
+                    <!-- seungho -->
+                    <div id="alertOpenStudy" class="alert alert-info" role="alert">
+                        스터디 공개를 하기 전, 우선 ICONLOOP와 연동하세요.<br/>
+                        ICONEX Chrome Extension을 이용해 연동할 계좌를 선택합니다.
+                    </div>
+                    <div class="form-group">
+                        <button id="requestOpenStudy" class="btn btn-outline-primary" type="button" aria-describedby="submitHelp">ICONEX 계좌 선택</button>
+                        <button id="openStudy" class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp" style="display:none;"></button>
+                    </div>
+                    <!-- seungho -->
+                </form>
+                <!-- seungho -->
+                <form class="col-sm-12" action="#" th:if="${study.published && !study.closed}"
+                      th:action="@{'/study/' + ${study.getPath()} + '/settings/study/close'}"
+                      th:object="${studyTxHashForm}" method="post" novalidate>
+                    <div id="alertCloseStudy" class="alert alert-warning" role="alert">
+                        스터디 종료를 하기 전, 우선 ICONLOOP와 연동하세요.<br/>
+                        ICONEX Chrome Extension을 이용해 연동할 계좌를 선택합니다.
+                    </div>
+                    <div class="form-group">
+                        <button id="requestCloseStudy" class="btn btn-outline-primary" type="button" aria-describedby="submitHelp">ICONEX 계좌 선택</button>
+                        <input id="closeStudyTxHash" class="form-control" type="text" th:field="*{closeStudyTxHash}" hidden>
+                        <button id="closeStudy" class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp" style="display:none;"></button>
+                    </div>
+                </form>
+                <!-- seungho -->
+                <div th:if="${study.closed}" class="col-sm-12 alert alert-info">
+                    이 스터디는 <span class="date-time" th:text="${study.closedDateTime}"></span>에 종료됐습니다.<br/>
+                    다시 스터디를 진행하고 싶다면 새로운 스터디를 만드세요.<br/>
+                </div>
+            </div>
+
+            <hr th:if="${!study.closed && !study.recruiting && study.published}"/>
+            <div class="row" th:if="${!study.closed && !study.recruiting && study.published}">
+                <h5 class="col-sm-12">팀원 모집</h5>
+                <form class="col-sm-12" action="#" th:action="@{'/study/' + ${study.getPath()} + '/settings/recruit/start'}" method="post" novalidate>
+                    <div class="alert alert-info" role="alert">
+                        팀원을 모집합니다.<br/>
+                        충분한 스터디 팀원을 모집했다면 모집을 멈출 수 있습니다.<br/>
+                        팀원 모집 정보는 1시간에 한번만 바꿀 수 있습니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">팀원 모집 시작</button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!study.closed && study.recruiting && study.published}"/>
+            <div class="row" th:if="${!study.closed && study.recruiting && study.published}">
+                <h5 class="col-sm-12">팀원 모집</h5>
+                <form class="col-sm-12" action="#" th:action="@{'/study/' + ${study.getPath()} + '/settings/recruit/stop'}" method="post" novalidate>
+                    <div class="alert alert-primary" role="alert">
+                        팀원 모집을 중답합니다.<br/>
+                        팀원 충원이 필요할 때 다시 팀원 모집을 시작할 수 있습니다.<br/>
+                        팀원 모집 정보는 1시간에 한번만 바꿀 수 있습니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">팀원 모집 중단</button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!study.closed}"/>
+            <div class="row" th:if="${!study.closed}">
+                <h5 class="col-sm-12">스터디 경로</h5>
+                <form class="col-sm-12 needs-validation" th:action="@{'/study/' + ${study.path} + '/settings/study/path'}"
+                      method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        스터디 경로를 수정하면 이전에 사용하던 경로로 스터디에 접근할 수 없으니 주의하세요. <br/>
+                    </div>
+                    <div class="form-group">
+                        <input id="path" type="text" name="newPath" th:value="${study.path}" class="form-control"
+                               placeholder="예) study-path" aria-describedby="pathHelp" required>
+                        <small id="pathHelp" class="form-text text-muted">
+                            공백없이 문자, 숫자, 대시(-)와 언더바(_)만 3자 이상 20자 이내로 입력하세요. 스터디 홈 주소에 사용합니다. 예) /study/<b>study-path</b>
+                        </small>
+                        <small class="invalid-feedback">스터디 경로를 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${studyPathError}" th:text="${studyPathError}">Path Error</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">경로 수정</button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!study.closed}"/>
+            <div class="row" th:if="${!study.closed}">
+                <h5 class="col-12">스터디 이름</h5>
+                <form class="needs-validation col-12" action="#" th:action="@{'/study/' + ${study.path} + '/settings/study/title'}" method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        스터디 이름을 수정합니다.<br/>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">스터디 이름</label>
+                        <input id="title" type="text" name="newTitle" th:value="${study.title}" class="form-control"
+                               placeholder="스터디 이름" aria-describedby="titleHelp" required maxlength="50">
+                        <small id="titleHelp" class="form-text text-muted">
+                            스터디 이름을 50자 이내로 입력하세요.
+                        </small>
+                        <small class="invalid-feedback">스터디 이름을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${studyTitleError}" th:text="${studyTitleError}">Title Error</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">스터디 이름 수정</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- seungho -->
+            <hr th:if="${!study.closed}"/>
+            <div class="row" th:if="${!study.closed}">
+                <h5 class="col-12">스터디 보증금</h5>
+                <form class="needs-validation col-12" action="#" th:action="@{'/study/' + ${study.path} + '/settings/study/initDeposit'}" method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        스터디 보증금을 변경합니다.<br/>
+                    </div>
+                    <div class="form-group">
+                        <label for="initDeposit">스터디 보증금</label>
+                        <input id="initDeposit" type="number" name="newInitDeposit" th:value="${study.initDeposit}" class="form-control"
+                               placeholder="스터디 보증금" aria-describedby="initDepositHelp" required maxlength="50">
+                        <small id="initDepositHelp" class="form-text text-muted">
+                            스터디 보증금을 숫자로 입력하세요.
+                        </small>
+                        <small class="invalid-feedback">스터디 보증금을 입력하세요.</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">스터디 보증금 변경</button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!study.closed}"/>
+            <div class="row" th:if="${!study.closed}">
+                <h5 class="col-12">결석 패널티</h5>
+                <form class="needs-validation col-12" action="#" th:action="@{'/study/' + ${study.path} + '/settings/study/attendPenalty'}" method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        결석 패널티를 변경합니다.<br/>
+                    </div>
+                    <div class="form-group">
+                        <label for="attendPenalty">결석 패널티</label>
+                        <input id="attendPenalty" type="number" name="newAttendPenalty" th:value="${study.attendPenalty}" class="form-control"
+                               placeholder="결석 패널티" aria-describedby="attendPenaltyHelp" required maxlength="50">
+                        <small id="attendPenaltyHelp" class="form-text text-muted">
+                            결석 패널티를 숫자로 입력하세요.
+                        </small>
+                        <small class="invalid-feedback">결석 패널티를 입력하세요.</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">결석 패널티 변경</button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!study.closed}"/>
+            <div class="row" th:if="${!study.closed}">
+                <h5 class="col-12">과제 패널티</h5>
+                <form class="needs-validation col-12" action="#" th:action="@{'/study/' + ${study.path} + '/settings/study/homeworkPenalty'}" method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        과제 패널티를 변경합니다.<br/>
+                    </div>
+                    <div class="form-group">
+                        <label for="homeworkPenalty">과제 패널티</label>
+                        <input id="homeworkPenalty" type="number" name="newHomeworkPenalty" th:value="${study.homeworkPenalty}" class="form-control"
+                               placeholder="과제 패널티" aria-describedby="homeworkPenaltyHelp" required maxlength="50">
+                        <small id="homeworkPenaltyHelp" class="form-text text-muted">
+                            과제 패널티를 숫자로 입력하세요.
+                        </small>
+                        <small class="invalid-feedback">과제 패널티를 입력하세요.</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">과제 패널티 변경</button>
+                    </div>
+                </form>
+            </div>
+            <!-- seungho -->
+
+            <hr/>
+            <div class="row" th:if="${study.isRemovable()}">
+                <h5 class="col-sm-12 text-danger">스터디 삭제</h5>
+                <form class="col-sm-12" action="#" th:action="@{'/study/' + ${study.getPath()} + '/settings/study/remove'}" method="post" novalidate>
+                    <div class="alert alert-danger" role="alert">
+                        스터디를 삭제하면 스터디 관련 모든 기록을 삭제하며 복구할 수 없습니다. <br/>
+                        <b>다음에 해당하는 스터디는 자동으로 삭제 됩니다.</b>
+                        <ul>
+                            <li>만든지 1주일이 지난 비공개 스터디</li>
+                            <li>스터디 공개 이후, 한달 동안 모임을 만들지 않은 스터디</li>
+                            <li>스터디 공개 이후, 모임을 만들지 않고 종료한 스터디</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-danger" type="submit" aria-describedby="submitHelp">스터디 삭제</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row" th:if="${!study.isRemovable()}">
+                <h5 class="col-sm-12 text-danger">스터디 삭제</h5>
+                <form class="col-sm-12" action="#" th:action="@{'/study/' + ${study.getPath()} + '/settings/study/remove'}" method="post" novalidate>
+                    <div class="alert alert-danger" role="alert">
+                        공개 중이고 모임을 했던 스터디는 삭제할 수 없습니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-danger" type="submit" aria-describedby="submitHelp" disabled>스터디 삭제</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- seungho -->
+        <div class="col-8" th:if="${study.scoreAddress == null}">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-info" role="alert">
+                        조금만 더 기다려주세요.<br/>
+                        ICONLOOP와 스터디 정보를 연동중입니다.<br/>
+                        3초 후 페이지를 새로고침해주세요.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- seungho -->
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script th:replace="fragments.html :: tooltip"></script>
+<script th:replace="fragments.html :: form-validation"></script>
+
+<!-- seungho -->
+<!-- ICON SDK for Javascript -->
+<script src="https://cdn.jsdelivr.net/gh/icon-project/icon-sdk-js@latest/build/icon-sdk-js.min.js"></script>
+<script th:inline="javascript">
+
+    window.addEventListener("ICONEX_RELAY_RESPONSE", eventHandler, false);
+
+    let iconServiceInStudySetting = window['icon-sdk-js'];
+    let IconAmountInStudySetting = iconServiceInStudySetting.IconAmount;
+    let IconConverterInStudySetting = iconServiceInStudySetting.IconConverter;
+    let IconBuilderInStudySetting = iconServiceInStudySetting.IconBuilder;
+
+    let alertInStudySetting;
+    let requestScoreInStudySetting;
+    let changeStatusInStudySetting;
+    let fromAddressInStudySetting;
+
+    if ([[${!study.published}]]) {
+        alertInStudySetting = document.getElementById("alertOpenStudy");
+        requestScoreInStudySetting = document.getElementById("requestOpenStudy");
+    }
+    else if ([[${study.published}]]) {
+        alertInStudySetting = document.getElementById("alertCloseStudy");
+        requestScoreInStudySetting = document.getElementById("requestCloseStudy");
+    }
+    else { console.log("Study is closed!"); }
+
+    if (requestScoreInStudySetting != null) {
+        requestScoreInStudySetting.onclick = function() {
+            if (fromAddressInStudySetting == null) { getAddressInStudySetting(); }
+            else { callScoreInStudySetting(); }
+        }
+    }
+
+    function getAddressInStudySetting() {
+        window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+            detail: {
+                type: 'REQUEST_ADDRESS'
+            }
+        }));
+    }
+
+    function callScoreInStudySetting() {
+        let parsed;
+        if ([[${!study.published}]]) {
+            changeStatusInStudySetting = document.getElementById("openStudy");
+            parsed = JSON.parse(setOpenStudyForm());
+        }
+        else if ([[${study.published}]]) {
+            changeStatusInStudySetting = document.getElementById("closeStudy");
+            parsed = JSON.parse(setCloseStudyForm());
+        }
+        window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+            detail: {
+                type: 'REQUEST_JSON-RPC',
+                payload: parsed
+            }
+        }));
+    }
+
+    function eventHandler(event) {
+        let type = event.detail.type;
+        let payload = event.detail.payload;
+        switch (type) {
+            case "RESPONSE_ADDRESS":
+                fromAddressInStudySetting = payload;
+                if ([[${!study.published}]]) {
+                    requestScoreInStudySetting.innerHTML = "스터디 공개";
+                    alertInStudySetting.innerHTML = "스터디를 다른 사용자에게 공개할 준비가 되었다면 버튼을 클릭하세요.<br/>소개, 배너 이미지, 스터디 주제 및 활동 지역을 등록했는지 확인하세요.<br/>스터디를 공개하면 주요 활동 지역과 스터디 주제에 관심있는 다른 사용자에게 알림을 전송합니다.";
+                }
+                else if ([[${study.published}]]) {
+                    requestScoreInStudySetting.innerHTML = "스터디 종료";
+                    alertInStudySetting.innerHTML = "스터디 활동을 마쳤다면 스터디를 종료하세요.<br/>스터디를 종료하면 더이상 팀원을 모집하거나 모임을 만들 수 없으며, 스터디 경로와 이름을 수정할 수 없습니다.<br/>스터디 모임과 참여한 팀원의 기록은 그대로 보관합니다.";
+                }
+                break;
+            case "RESPONSE_JSON-RPC":
+                if ([[${study.published}]]) {
+                    document.getElementById("closeStudyTxHash").value = payload.result;
+                }
+                changeStatusInStudySetting.click();
+                break;
+            default:
+        }
+    }
+
+    function setOpenStudyForm() {
+        let callTransactionBuilder = new IconBuilderInStudySetting.CallTransactionBuilder;
+        let callTransactionData = callTransactionBuilder
+            .version(IconConverterInStudySetting.toBigNumber(3))
+            .from(fromAddressInStudySetting)
+            .to([[${study.scoreAddress}]])
+            .stepLimit(IconConverterInStudySetting.toBigNumber(1000000))
+            .timestamp((new Date()).getTime() * 1000)
+            .nid(IconConverterInStudySetting.toBigNumber(3))
+            .method('openStudy')
+            .value(IconAmountInStudySetting.of([[${study.initDeposit}]], IconAmountInStudySetting.Unit.ICX).toLoop())
+            .params({
+                "_attendPenalty": IconConverterInStudySetting.toHex([[${study.attendPenalty}]]),
+                "_homeworkPenalty": IconConverterInStudySetting.toHex([[${study.homeworkPenalty}]]),
+                "_initDeposit": IconConverterInStudySetting.toHex([[${study.initDeposit}]])
+            })
+            .build();
+        let scoreData = JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "icx_sendTransaction",
+            "params": IconConverterInStudySetting.toRawTransaction(callTransactionData),
+            "id": 1234
+        });
+        return scoreData;
+    }
+
+    function setCloseStudyForm() {
+        let callTransactionBuilder = new IconBuilderInStudySetting.CallTransactionBuilder;
+        let callTransactionData = callTransactionBuilder
+            .version(IconConverterInStudySetting.toBigNumber(3))
+            .from(fromAddressInStudySetting)
+            .to([[${study.scoreAddress}]])
+            .stepLimit(IconConverterInStudySetting.toBigNumber(1000000))
+            .timestamp((new Date()).getTime() * 1000)
+            .nid(IconConverterInStudySetting.toBigNumber(3))
+            .method('closeStudy')
+            .build();
+        let scoreData = JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "icx_sendTransaction",
+            "params": IconConverterInStudySetting.toRawTransaction(callTransactionData),
+            "id": 1234
+        });
+        return scoreData;
+    }
+</script>
+<!-- seungho -->
+</body>
+</html>

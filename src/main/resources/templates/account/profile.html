@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+
+    <div class="container-xl px-3 px-md-4 px-lg-5">
+        <div class ="gutter-condensed gutter-lg flex-column flex-md-row d-flex">
+           <div class="flex-shrink-0 col-12 col-md-3 mb-4 mb-md-0">
+               <div class="row mt-5 justify-content-left">
+                   <div class="d-flex" style="border-radius: 50% !important;">
+                       <!-- Avatar -->
+                       <div class="d-flex">
+                           <svg th:if="${#strings.isEmpty(account.profileImage)}" class="img-fluid float-left rounded img-thumbnail" style="border-radius: 50% !important;"
+                                th:data-jdenticon-value="${account.nickname}" width="260" height="260"></svg>
+                           <img th:if="${!#strings.isEmpty(account.profileImage)}" class="img-fluid float-left rounded img-thumbnail"
+                                th:src="${account.profileImage}"
+                                width="260" height="260"/>
+                       </div>
+                   </div>
+                   <div class="d-flex vcard-names-container float-left col-10 col-md-12 pt-1 pt-md-3 pb-1 pb-md-3 js-sticky js-user-profile-sticky-fields" style="flex-direction: column">
+                       <div class="d-flex" th:text="${account.nickname}" style="line-height: 1.25; font-weight: 600; font-size: 32px;">studicon</div>
+                       <div class="d-flex" th:if="${!#strings.isEmpty(account.bio)}" th:text="${account.bio}" style="font-size: 20px;font-style: normal; font-weight: 300;line-height: 24px;color: #666;">bio</div>
+                       <div class="d-flex" th:if="${#strings.isEmpty(account.bio) && isOwner}" style="margin-top: 5px;">
+                           한 줄 소개를 추가하세요.
+                       </div>
+                   </div>
+
+                   <div class="d-flex vcard-names-container float-left col-10 col-md-12 pt-1 pt-md-3 pb-1 pb-md-3 js-sticky js-user-profile-sticky-fields"
+                        th:text="${account.occupation}">
+                   </div>
+
+                   <div class="d-flex" style="width: 100%; color: white;" th:if="${isOwner}">
+                       <a th:href="@{/settings/profile}" style="width: 100%; color: white;">
+                           <button class="btn btn-block mb-3 js-profile-editable-edit-button" style="background-color: #2E2E2E; color: white;"> Edit Profile </button>
+                       </a>
+                   </div>
+                   <div class="row mt-3 justify-content-left">
+                       <div class="d-flex" style="width: 100%;">
+                           <div class="tab-content" id="v-pills-tabContent">
+                               <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                   <p th:if="${!#strings.isEmpty(account.url)}" style="white-space: nowrap;">
+                                    <span style="font-size: 20px;">
+                                        <i class="fa fa-link col-1"></i>
+                                    </span>
+                                       <span th:text="${account.url}" class="col-11"></span>
+                                   </p>
+                                   <p th:if="${!#strings.isEmpty(account.occupation)}" style="white-space: nowrap;">
+                                <span style="font-size: 20px;">
+                                    <i class="fa fa-briefcase col-1"></i>
+                                </span>
+                                       <span th:text="${account.occupation}" class="col-9"></span>
+                                   </p>
+                                   <p th:if="${!#strings.isEmpty(account.location)}" style="white-space: nowrap;">
+                                <span style="font-size: 20px;">
+                                    <i class="fa fa-location-arrow col-1"></i>
+                                </span>
+                                       <span th:text="${account.location}" class="col-9"></span>
+                                   </p>
+                                   <p th:if="${isOwner}" style="white-space: nowrap;">
+                                <span style="font-size: 20px;">
+                                    <i class="fa fa-envelope-o col-1"></i>
+                                </span>
+                                       <span th:text="${account.email}" class="col-9"></span>
+                                   </p>
+                                   <p th:if="${isOwner || account.emailVerified}" style="white-space: nowrap;">
+                                <span style="font-size: 20px;">
+                                    <i class="fa fa-calendar-o col-1"></i>
+                                </span>
+                                       <span th:if="${isOwner && !account.emailVerified}" class="col-9" >
+                                    <a href="#" th:href="@{'/checkemail?email=' + ${account.email}}">가입을 완료하려면 이메일을 확인하세요.</a>
+                                </span>
+                                       <span th:text="${#temporals.format(account.joinedAt, 'yyyy년 M월 가입')}" class="col-9"></span>
+                                   </p>
+                               </div>
+                               <div class="tab-pane fade" id="v-pills-study" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                   Study
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="flex-shrink-0 col-12 col-md-9 mb-4 mb-md-0">
+                <div class="user-profile-nav d-block position-sticky top-0 pl-5 ml-n3 mr-n3 pr-5 row mt-5 justify-content-left">
+                    <div class="d-flex" style="    color: #3e3a39; font-size: 25px; font-weight: 900; height: 50px;"> 수료한 스터디 </div>
+                    <div class="d-flex" th:each="managerStudyClosed: ${myStudyManagerClosed}" style="margin-left: auto; margin-right: auto; flex-wrap: wrap;" >
+                        <div class="card d-flex" style="width: 18rem; filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); border-radius: 20px;">
+                            <div th:if="${managerStudyClosed.useBanner}">
+                                <img style="height: 150px;" class="card-img-top img-thumb" th:src="${managerStudyClosed.image}" alt="Card image cap"/>
+                            </div>
+                            <div th:if="${!managerStudyClosed.useBanner}">
+                                <img style="height: 150px;" class="card-img-top img-thumb" src="https://t1.kakaocdn.net/kakaocorp/admin/co/main-content/4540.jpg" alt="Card image cap">
+                            </div>
+                            <div class="card-body">
+                                <strong class="tit_newsfeed" th:text="'스터디: '+${managerStudyClosed.title}">Study title</strong>
+                                <p style="margin-bottom: 0.5rem;">
+                            <span style="white-space: nowrap; font-size: 12px;">
+                                <i class="fa fa-calendar-o">시작날짜: </i>
+                                <span id="publishedDateTime" class="calendar" th:text="${managerStudyClosed.getStartStudyDateTime()}">Last updated 3 mins ago</span>
+                            </span>
+                                </p>
+                                <p style="margin-bottom: 0.5rem;">
+                                    <span style="white-space: nowrap; font-size: 12px;">
+                                        <i class="fa fa-calendar-o">수료 날짜: </i>
+                                        <span id="closedDateTime" class="calendar" th:text="${managerStudyClosed.getClosedStudyDateTime()}">Last updated 3 mins ago</span>
+                                    </span>
+                                </p>
+                                <a th:href="@{'/study/' + ${managerStudyClosed.path}}"
+                                   class="card-link btn btn-outline-primary btn-sm my-1" style="width: 40%; margin-top: 10px;">스터디 조회</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
+<head th:replace="fragments.html :: head">
+    <style>
+        .container {
+            width:100%;
+            height: 100%;
+        }
+    </style>
+<body class="bg-light">
+
+<script th:inline="javascript">
+  window.onload = function() {
+
+    $("#slide-item-1").click(function(){
+      location.href="/mainAfterLogin";
+      // $(".container").load("/mainAfterLogin .container").hide().fadeIn()
+    })
+
+    // $("#slide-item-2").click(function(){
+    //     $(".container").load("/profile/" +[[${account.nickname}]]
+    //         +" .container").hide().fadeIn()
+    // })
+
+    $("#slide-item-3").click(function(){
+      location.href="/studyAfterLogin";
+      // $(".container").load("/studyAfterLogin .main_visual").hide().fadeIn()
+    })
+
+    $("#slide-item-4").click(function(){
+      location.href="/eventsAfterLogin";
+      // $(".container").load("/eventsAfterLogin .container").hide().fadeIn()
+    })
+
+  }
+</script>
+<div class="row" style="max-height:60px;margin-left:20px; margin-right:20px; overflow: visible; display: flex">
+    <div class="d-flex align-content-center" style="height: 60px;">
+        <div class="d-flex" style="margin-top: auto; margin-bottom: auto;">
+            <a href="/" th:href="@{/}">
+                <img src="/images/logo_white.png" width="150" height="30;">
+            </a>
+        </div>
+    </div>
+    <nav class="slidemenu">
+        <!-- Item 1 -->
+        <input type="radio" name="slideItem" id="slide-item-1" class="slide-toggle" checked/>
+        <label for="slide-item-1"><span>Home</span></label>
+        <!-- Item 3 -->
+        <input type="radio" name="slideItem" id="slide-item-3" class="slide-toggle"/>
+        <label for="slide-item-3"><span>Study</span></label>
+        <!-- Item 4 -->
+        <input type="radio" name="slideItem" id="slide-item-4" class="slide-toggle"/>
+        <label for="slide-item-4"><span>Events</span></label>
+        <div class="clear"></div>
+        <!-- Bar -->
+        <div class="slider">
+            <div class="bar"></div>
+        </div>
+    </nav>
+
+
+    <button class="button" id="button-4" style="width: 150px; height: 30px; margin-top:auto; margin-bottom: auto; border-radius: 20px; font-weight: 500;" th:href="@{/new-study}">
+        <div id="underline"></div>
+        <a style="color: black;" th:href="@{/new-study}">스터디 개설</a>
+    </button>
+
+    <div class="d-flex" sec:authorize="isAuthenticated()" style="height: 45px; margin-top: auto; margin-bottom: auto;">
+        <a class="link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+                 width="45" height="45" class="rounded border bg-light"></svg>
+            <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+                 width="45" height="45" class="rounded border"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-sm-left" aria-labelledby="userDropdown" style="z-index: 1; overflow: visible">
+            <h6 class="dropdown-header">
+                <span sec:authentication="name">Username</span>
+            </h6>
+            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+            <a class="dropdown-item" >스터디</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+            <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                <button class="dropdown-item" type="submit">로그아웃</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}">
+    STUDICON 가입을 완료하려면 <a href="#" th:href="@{/check-email(email=${account.email})}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+</div>
+
+<div class="container text-center" style="width : 100%;height: 100%; padding:0px">
+    <video id = "video" muted autoplay loop>
+        <source src="/images/home_video_1.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div th:replace="fragments.html :: footer"></div>
+<div th:replace="fragments.html :: date-time"></div>
+
+</body>
+</html>

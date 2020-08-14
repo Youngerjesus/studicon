@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<style>
+
+    .h1 {
+        font-family: 'Black Han Sans', sans-serif;
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
+                                                                                                                              }
+    .main_visual {
+        background-color: currentColor;
+        width:80%;
+        height: 80%;
+    }
+
+    .cardi {
+        width:100%;
+        margin: 0 auto;
+        paddig-top: 3.47222222vw;
+        padding-right: 3.47222222vw;
+        padding-bottom: 3.47222222vw;;
+        padding-left: 3.47222222vw;
+        border: solid lightgray;
+        border-radius: 20px;
+    }
+</style>
+
+<body>
+<div th:replace="fragments.html :: main-nav"></div>
+<div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}" style="margin-bottom: 0rem;">
+    STUDICON 가입을 완료하려면 <a href="#" th:href="@{/check-email(email=${account.email})}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+</div>
+
+<div class="main_visual" style="background-color: currentColor; padding-left: 0; padding-right: 0;">
+    <div class="d-flex" style="flex-direction: row;">
+        <div class="d-flex" style="width: 15%;">
+            <a href="http://www.skkrypto.com/">
+                <img  src="/images/skkrypto.png" width="90%" height="90%" style="display: flex; margin-left: auto; margin-right: auto; cursor: pointer;">
+            </a>
+        </div>
+        <div class="d-flex" style="width: 85%; background-color: white;">
+            <div class="d-flex fluid flex-fill pt-3 px-3 pt-md-4 px-md-4" style="flex-direction: column; ">
+                <div class="row cardi" style="margin-left: 0; margin-right: 0; width: 100%; border: none;" >
+                    <div class="d-flex" style="  height: 50px; width: 100%; margin-left: auto; margin-right: auto; color: #3e3a39; font-size: 25px; font-weight: 900;">
+                        <div class="d-flex">
+                            참가중인 스터디
+                        </div>
+                        <div class="d-flex" style="margin-left: auto;">
+                            <form th:action="@{/search/study}" class="form-inline" method="get" style="filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));">
+                                <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기" aria-label="Search" />
+                            </form>
+                        </div>
+                    </div>
+                    <div th:replace="fragments.html :: study-list (studyList=${everyStudyList})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <div style="margin: auto; width: 80%; background-color: #f1f1f1; padding-bottom: 20px; border: solid #f1f1f1;border-radius: 20px ">-->
+<!--        <div class="row cardi">-->
+<!--            <h1>관심 스터디 주제</h1>-->
+<!--            <ul class="list-group list-group-flush">-->
+<!--                <li class="list-group-item" th:each="tag: ${account.tags}">-->
+<!--                    <i class="fa fa-tag"></i> <span th:text="${tag.title}"></span>-->
+<!--                </li>-->
+<!--                <li class="list-group-item" th:if="${account.tags.size() == 0}">-->
+<!--                    <a th:href="@{/settings/tags}" class="btn-text">관심 스터디 주제</a>를 등록하세요.-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+
+<!--    <div style="margin: auto; width: 80%; background-color: #f1f1f1; padding-bottom: 20px; border: solid #f1f1f1;border-radius: 20px ">-->
+<!--        <div class="row cardi">-->
+<!--            <h1>주요 활동 지역</h1>-->
+<!--            <ul class="list-group list-group-flush">-->
+<!--                    <li class="list-group-item" th:each="zone: ${account.zones}">-->
+<!--                        <i class="fa fa-globe"></i> <span th:text="${zone.getLocalNameOfCity()}">Zone</span>-->
+<!--                    </li>-->
+<!--                    <li class="list-group-item" th:if="${account.zones.size() == 0}">-->
+<!--                        <a th:href="@{/settings/zones}" class="btn-text">주요 활동 지역</a>을 등록하세요.-->
+<!--                    </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div style="margin: auto; width: 80%; background-color: #f1f1f1; padding-bottom: 20px; border: solid #f1f1f1;border-radius: 20px ">-->
+<!--        <div class="row cardi">-->
+<!--            <div class="col-12">-->
+<!--                <h1>주요 활동 지역의 관심 주제 스터디</h1><br><br>-->
+<!--                <h5 class="font-weight-light mt-3" th:if="${#lists.isEmpty(studyList)}">관련 스터디가 없습니다.</h5>-->
+<!--                <div class="row justify-content-center">-->
+<!--                    <div th:replace="fragments.html :: study-list (studyList=${studyList})"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--     </div>-->
+
+<!--        <div style="margin: auto; width: 80%; background-color: #f1f1f1; padding-bottom: 20px; border: solid #f1f1f1;border-radius: 20px ">-->
+<!--                <div class="row cardi">-->
+<!--                <h1>관리중인 스터디</h1>-->
+<!--                <h5 class="font-weight-light" th:if="${#lists.isEmpty(studyManagerOf)}">관리중인 스터디가 없습니다.</h5>-->
+<!--                <div class="list-group" th:if="${!#lists.isEmpty(studyManagerOf)}">-->
+<!--                    <a href="#" th:href="@{'/study/' + ${study.path}}" th:text="${study.title}"-->
+<!--                       class="list-group-item list-group-item-action" th:each="study: ${studyManagerOf}">-->
+<!--                        Study title-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div style="margin: auto; width: 80%; background-color: #f1f1f1; padding-bottom: 20px; border: solid #f1f1f1;border-radius: 20px ">-->
+<!--        <div class="row cardi">-->
+<!--        <h1>참여중인 스터디</h1>-->
+<!--        <h5 class="font-weight-light mt-3" th:if="${#lists.isEmpty(studyMemberOf)}">참여중인 스터디가 없습니다.</h5>-->
+<!--        <div class="list-group" th:if="${!#lists.isEmpty(studyMemberOf)}">-->
+<!--            <a href="#" th:href="@{'/study/' + ${study.path}}" th:text="${study.title}"-->
+<!--               class="list-group-item list-group-item-action" th:each="study: ${studyManagerOf}">-->
+<!--                Study title-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--        </div>-->
+</div>
+
+</body>
+</html>

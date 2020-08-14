@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>STUDICON</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+    <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic:wght@800&display=swap" rel="stylesheet">
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+    <style>
+        #navdiv {
+            max-height: 60px;
+            background-color: #2E2E2E;
+            font-family: arial, sans-serif;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            height : 100%;
+            max-width: 100%;
+            vertical-align: middle;
+        }
+
+        .tagify-outside{
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        #study-logo {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        #study-logo img {
+            height: auto;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+        }
+
+        body,
+        input,
+        button,
+        select,
+        optgroup,
+        textarea,
+        .tooltip,
+        .popover {
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        table th {
+            font-weight: lighter;
+        }
+
+        mark {
+            padding: 0;
+            background: transparent;
+            background: linear-gradient(to right, #f0ad4e 50%, transparent 50%);
+            background-position: right bottom;
+            background-size: 200% 100%;
+            transition: all .5s ease;
+            color: #fff;
+        }
+
+        mark.animate {
+            background-position: left bottom;
+            color: #000;
+        }
+
+        .jumbotron {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin-bottom: 0;
+            background-color: transparent;
+            display : flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        @media (min-width: 768px) {
+            .jumbotron {
+                padding-top: 6rem;
+                padding-bottom: 6rem;
+            }
+        }
+
+        .jumbotron p:last-child {
+            margin-bottom: 0;
+        }
+
+        .jumbotron h1 {
+            font-weight: 300;
+        }
+
+        .jumbotron .container {
+            max-width: 40rem;
+
+        }
+
+        #video{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+
+            z-index: -1000;
+            overflow: hidden;
+            background-size: cover;
+        }
+        .button {
+            display: inline-flex;
+            height: 40px;
+            width: 150px;
+            margin: 20px 20px 20px 20px;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-size: .8em;
+            letter-spacing: 1.5px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        a:hover{
+            text-decoration: none;
+            color: black;
+        }
+
+        #button-4 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #button-4 a {
+            position: relative;
+            transition: all .45s ease-Out;
+        }
+
+        #underline {
+            border: 0;
+            width: 100%;
+            height: 2px;
+            margin-top: 15px;
+            align-self: flex-end;
+            left: -200px;
+            background: #2E2E2E;
+            position: absolute;
+            transition: all .3s ease-Out;
+            bottom: 0;
+        }
+
+        #button-4:hover #underline {
+            left: 0;
+        }
+
+        <!--side-menu css -->
+        body {
+            background: #EEE;
+            overflow-x:hidden;
+        }
+        .clearfix:before,
+        .clearfix:after {
+            content: " ";
+            display: table;
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+        .clearfix {
+            *zoom: 1;
+        }
+
+        .mcd-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 200px;
+            margin-left: 50px;
+            background: #FFFFFF;
+            border-color: black;
+            /*height: 100px;*/
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 8px;
+
+            /* == */
+            width: 250px;
+            /* == */
+        }
+        .mcd-menu li {
+            position: relative;
+            /*float:left;*/
+        }
+        .mcd-menu li a {
+            display: block;
+            text-decoration: none;
+            padding: 12px 20px;
+            color: #777;
+            /*text-align: center;
+            border-right: 1px solid #E7E7E7;*/
+            /* == */
+            text-align: left;
+            height: 72px;
+            position: relative;
+            border-bottom: 1px solid #03060b;
+            /* == */
+        }
+        .mcd-menu li a i {
+            /*display: block;
+            font-size: 30px;
+            margin-bottom: 10px;*/
+
+            /* == */
+            float: left;
+            font-size: 20px;
+            margin: 0 10px 0 0;
+            /* == */
+
+        }
+        /* == */
+        .mcd-menu li a p {
+            float: left;
+            margin: 0 ;
+        }
+        /* == */
+
+        .mcd-menu li a strong {
+            display: block;
+            text-transform: uppercase;
+        }
+        .mcd-menu li a small {
+            display: block;
+            font-size: 10px;
+        }
+
+        .mcd-menu li a i, .mcd-menu li a strong, .mcd-menu li a small {
+            position: relative;
+
+            transition: all 300ms linear;
+            -o-transition: all 300ms linear;
+            -ms-transition: all 300ms linear;
+            -moz-transition: all 300ms linear;
+            -webkit-transition: all 300ms linear;
+        }
+        .mcd-menu li:hover > a i {
+            opacity: 1;
+            -webkit-animation: moveFromTop 300ms ease-in-out;
+            -moz-animation: moveFromTop 300ms ease-in-out;
+            -ms-animation: moveFromTop 300ms ease-in-out;
+            -o-animation: moveFromTop 300ms ease-in-out;
+            animation: moveFromTop 300ms ease-in-out;
+        }
+        .mcd-menu li:hover a strong {
+            opacity: 1;
+            -webkit-animation: moveFromLeft 300ms ease-in-out;
+            -moz-animation: moveFromLeft 300ms ease-in-out;
+            -ms-animation: moveFromLeft 300ms ease-in-out;
+            -o-animation: moveFromLeft 300ms ease-in-out;
+            animation: moveFromLeft 300ms ease-in-out;
+        }
+        .mcd-menu li:hover a small {
+            opacity: 1;
+            -webkit-animation: moveFromRight 300ms ease-in-out;
+            -moz-animation: moveFromRight 300ms ease-in-out;
+            -ms-animation: moveFromRight 300ms ease-in-out;
+            -o-animation: moveFromRight 300ms ease-in-out;
+            animation: moveFromRight 300ms ease-in-out;
+        }
+
+        .mcd-menu li:hover > a {
+            color: #e67e22;
+        }
+        .mcd-menu li a.active {
+            position: relative;
+            color: #e67e22;
+            border:0;
+            /*border-top: 4px solid #e67e22;
+            border-bottom: 4px solid #e67e22;
+            margin-top: -4px;*/
+            box-shadow: 0 0 5px #DDD;
+            -moz-box-shadow: 0 0 5px #DDD;
+            -webkit-box-shadow: 0 0 5px #DDD;
+
+            /* == */
+            border-left: 4px solid #e67e22;
+            border-right: 4px solid #e67e22;
+            margin: 0 -4px;
+            /* == */
+        }
+        .mcd-menu li a.active:before {
+            content: "";
+            position: absolute;
+            /*top: 0;
+            left: 45%;
+            border-top: 5px solid #e67e22;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;*/
+
+            /* == */
+            top: 42%;
+            left: 0;
+            border-left: 5px solid #e67e22;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            /* == */
+        }
+
+        /* == */
+        .mcd-menu li a.active:after {
+            content: "";
+            position: absolute;
+            top: 42%;
+            right: 0;
+            border-right: 5px solid #e67e22;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        /* == */
+
+        @-webkit-keyframes moveFromTop {
+            from {
+                opacity: 0;
+                -webkit-transform: translateY(200%);
+                -moz-transform: translateY(200%);
+                -ms-transform: translateY(200%);
+                -o-transform: translateY(200%);
+                transform: translateY(200%);
+            }
+            to {
+                opacity: 1;
+                -webkit-transform: translateY(0%);
+                -moz-transform: translateY(0%);
+                -ms-transform: translateY(0%);
+                -o-transform: translateY(0%);
+                transform: translateY(0%);
+            }
+        }
+        @-webkit-keyframes moveFromLeft {
+            from {
+                opacity: 0;
+                -webkit-transform: translateX(200%);
+                -moz-transform: translateX(200%);
+                -ms-transform: translateX(200%);
+                -o-transform: translateX(200%);
+                transform: translateX(200%);
+            }
+            to {
+                opacity: 1;
+                -webkit-transform: translateX(0%);
+                -moz-transform: translateX(0%);
+                -ms-transform: translateX(0%);
+                -o-transform: translateX(0%);
+                transform: translateX(0%);
+            }
+        }
+        @-webkit-keyframes moveFromRight {
+            from {
+                opacity: 0;
+                -webkit-transform: translateX(-200%);
+                -moz-transform: translateX(-200%);
+                -ms-transform: translateX(-200%);
+                -o-transform: translateX(-200%);
+                transform: translateX(-200%);
+            }
+            to {
+                opacity: 1;
+                -webkit-transform: translateX(0%);
+                -moz-transform: translateX(0%);
+                -ms-transform: translateX(0%);
+                -o-transform: translateX(0%);
+                transform: translateX(0%);
+            }
+        }
+
+
+
+        .mcd-menu li ul,
+        .mcd-menu li ul li ul {
+            position: absolute;
+            height: auto;
+            min-width: 200px;
+            padding: 0;
+            margin: 0;
+            background: #FFF;
+            /*border-top: 4px solid #e67e22;*/
+            opacity: 0;
+            visibility: hidden;
+            transition: all 300ms linear;
+            -o-transition: all 300ms linear;
+            -ms-transition: all 300ms linear;
+            -moz-transition: all 300ms linear;
+            -webkit-transition: all 300ms linear;
+            /*top: 130px;*/
+            z-index: 1000;
+
+            /* == */
+            left:280px;
+            top: 0px;
+            border-left: 4px solid #e67e22;
+            /* == */
+        }
+        .mcd-menu li ul:before {
+            content: "";
+            position: absolute;
+            /*top: -8px;
+            left: 23%;
+            border-bottom: 5px solid #e67e22;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;*/
+
+            /* == */
+            top: 25px;
+            left: -9px;
+            border-right: 5px solid #e67e22;
+            border-bottom: 5px solid transparent;
+            border-top: 5px solid transparent;
+            /* == */
+        }
+        .mcd-menu li:hover > ul,
+        .mcd-menu li ul li:hover > ul {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            /*top: 100px;*/
+
+            /* == */
+            left:250px;
+            /* == */
+        }
+        /*.mcd-menu li ul li {
+          float: none;
+        }*/
+        .mcd-menu li ul li a {
+            padding: 10px;
+            text-align: left;
+            border: 0;
+            border-bottom: 1px solid #EEE;
+
+            /* == */
+            height: auto;
+            /* == */
+        }
+        .mcd-menu li ul li a i {
+            font-size: 16px;
+            display: inline-block;
+            margin: 0 10px 0 0;
+        }
+        .mcd-menu li ul li ul {
+            left: 230px;
+            top: 0;
+            border: 0;
+            border-left: 4px solid #e67e22;
+        }
+        .mcd-menu li ul li ul:before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            /*left: -14px;*/
+            /* == */
+            left: -9px;
+            /* == */
+            border-right: 5px solid #e67e22;
+            border-bottom: 5px solid transparent;
+            border-top: 5px solid transparent;
+        }
+        .mcd-menu li ul li:hover > ul {
+            top: 0px;
+            left: 200px;
+        }
+
+
+
+        /*.mcd-menu li.float {
+          float: right;
+        }*/
+        .mcd-menu li a.search {
+            /*padding: 29px 20px 30px 10px;*/
+            padding: 10px 10px 15px 10px;
+            clear: both;
+        }
+        .mcd-menu li a.search i {
+            margin: 0;
+            display: inline-block;
+            font-size: 18px;
+        }
+        .mcd-menu li a.search input {
+            border: 1px solid #EEE;
+            padding: 10px;
+            background: #FFF;
+            outline: none;
+            color: #777;
+
+            /* == */
+            width:170px;
+            float:left;
+            /* == */
+        }
+        .mcd-menu li a.search button {
+            border: 1px solid #e67e22;
+            /*padding: 10px;*/
+            background: #e67e22;
+            outline: none;
+            color: #FFF;
+            margin-left: -4px;
+
+            /* == */
+            float:left;
+            padding: 10px 10px 11px 10px;
+            /* == */
+        }
+        .mcd-menu li a.search input:focus {
+            border: 1px solid #e67e22;
+        }
+
+        .search-mobile {
+            display:none !important;
+            background:#e67e22;
+            border-left:1px solid #e67e22;
+            border-radius:0 3px 3px 0;
+        }
+        .search-mobile i {
+            color:#FFF;
+            margin:0 !important;
+        }
+
+
+        @media only screen and (min-width: 960px) and (max-width: 1199px) {
+            .mcd-menu {
+                margin-left:10px;
+            }
+        }
+
+        @media only screen and (min-width: 768px) and (max-width: 959px) {
+            .mcd-menu {
+                width: 200px;
+            }
+            .mcd-menu li a {
+                height:30px;
+            }
+            .mcd-menu li a i {
+                font-size: 22px;
+            }
+            .mcd-menu li a strong {
+                font-size: 12px;
+            }
+            .mcd-menu li a small {
+                font-size: 10px;
+            }
+            .mcd-menu li a.search input {
+                width: 120px;
+                font-size: 12px;
+            }
+            .mcd-menu li a.search buton{
+                padding: 8px 10px 9px 10px;
+            }
+            .mcd-menu li > ul {
+                min-width:180px;
+            }
+            .mcd-menu li:hover > ul {
+                min-width:180px;
+                left:200px;
+            }
+            .mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+                min-width:150px;
+            }
+            .mcd-menu li ul li:hover > ul {
+                left:180px;
+                min-width:150px;
+            }
+            .mcd-menu li ul li ul li:hover > ul {
+                left:150px;
+                min-width:150px;
+            }
+            .mcd-menu li ul a {
+                font-size:12px;
+            }
+            .mcd-menu li ul a i {
+                font-size:14px;
+            }
+        }
+
+        @media only screen and (min-width: 480px) and (max-width: 767px) {
+
+            .mcd-menu {
+                width: 50px;
+            }
+            .mcd-menu li a {
+                position: relative;
+                padding: 12px 16px;
+                height:20px;
+            }
+            .mcd-menu li a small {
+                display: none;
+            }
+            .mcd-menu li a strong {
+                display: none;
+            }
+            .mcd-menu li a:hover strong,.mcd-menu li a.active strong {
+                display:block;
+                font-size:10px;
+                padding:3px 0;
+                position:absolute;
+                bottom:0px;
+                left:0;
+                background:#e67e22;
+                color:#FFF;
+                min-width:100%;
+                text-transform:lowercase;
+                font-weight:normal;
+                text-align:center;
+            }
+            .mcd-menu li .search {
+                display: none;
+            }
+
+            .mcd-menu li > ul {
+                min-width:180px;
+                left:70px;
+            }
+            .mcd-menu li:hover > ul {
+                min-width:180px;
+                left:50px;
+            }
+            .mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+                min-width:150px;
+            }
+            .mcd-menu li ul li:hover > ul {
+                left:180px;
+                min-width:150px;
+            }
+            .mcd-menu li ul li ul li > ul {
+                left:35px;
+                top: 45px;
+                border:0;
+                border-top:4px solid #e67e22;
+            }
+            .mcd-menu li ul li ul li > ul:before {
+                left:30px;
+                top: -9px;
+                border:0;
+                border-bottom:5px solid #e67e22;
+                border-left:5px solid transparent;
+                border-right:5px solid transparent;
+            }
+            .mcd-menu li ul li ul li:hover > ul {
+                left:30px;
+                min-width:150px;
+                top: 35px;
+            }
+            .mcd-menu li ul a {
+                font-size:12px;
+            }
+            .mcd-menu li ul a i {
+                font-size:14px;
+            }
+
+        }
+
+        @media only screen and (max-width: 479px) {
+            .mcd-menu {
+                width: 50px;
+            }
+            .mcd-menu li a {
+                position: relative;
+                padding: 12px 16px;
+                height:20px;
+            }
+            .mcd-menu li a small {
+                display: none;
+            }
+            .mcd-menu li a strong {
+                display: none;
+            }
+            .mcd-menu li a:hover strong,.mcd-menu li a.active strong {
+                display:block;
+                font-size:10px;
+                padding:3px 0;
+                position:absolute;
+                bottom:0px;
+                left:0;
+                background:#e67e22;
+                color:#FFF;
+                min-width:100%;
+                text-transform:lowercase;
+                font-weight:normal;
+                text-align:center;
+            }
+            .mcd-menu li .search {
+                display: none;
+            }
+
+            .mcd-menu li > ul {
+                min-width:180px;
+                left:70px;
+            }
+            .mcd-menu li:hover > ul {
+                min-width:180px;
+                left:50px;
+            }
+            .mcd-menu li ul li > ul, .mcd-menu li ul li ul li > ul {
+                min-width:150px;
+            }
+            .mcd-menu li ul li:hover > ul {
+                left:180px;
+                min-width:150px;
+            }
+            .mcd-menu li ul li ul li > ul {
+                left:35px;
+                top: 45px;
+                border:0;
+                border-top:4px solid #e67e22;
+            }
+            .mcd-menu li ul li ul li > ul:before {
+                left:30px;
+                top: -9px;
+                border:0;
+                border-bottom:5px solid #e67e22;
+                border-left:5px solid transparent;
+                border-right:5px solid transparent;
+            }
+            .mcd-menu li ul li ul li:hover > ul {
+                left:30px;
+                min-width:150px;
+                top: 35px;
+            }
+            .mcd-menu li ul a {
+                font-size:12px;
+            }
+            .mcd-menu li ul a i {
+                font-size:14px;
+            }
+
+        }
+
+
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        .clear{
+            clear: both;
+        }
+
+
+        .slide-toggle{
+            display: none;
+        }
+
+        .slidemenu{
+            top:0;
+            left:0;
+            right:0;
+            font-family: arial, sans-serif;
+            max-height: 60px;
+            max-width: 450px;
+            margin : 0 auto;
+            text-align: center;
+
+            /*
+            margin-top:5px;
+            margin-left: 500px;
+            margin-right: auto;
+            margin-bottom: 50px;
+            */
+            overflow: hidden;
+        }
+        .slidemenu a {
+            color: #FFFFFF;
+            size:1px;
+        }
+
+        .slidemenu label{
+            width: 25%;
+            text-align: center;
+            display: block;
+            float: left;
+            color: #FFFFFF;
+            opacity: 0.2;
+
+        }
+
+        .slidemenu label:hover{
+            cursor: pointer;
+            color: #FFFFFF;
+        }
+
+        .slidemenu label span{
+            display: block;
+            padding-left:50px;
+            padding-right: 50px;
+            padding-top:10px;
+        }
+
+        .slidemenu label .icon{
+            display: flex;
+            font-size: 20px;
+            border: solid 2px #FFFFFF;
+            text-align: center;
+            height: 50px;
+            width: 50px;
+            display: block;
+            margin: 0 auto;
+            line-height: 50px;
+            border-radius: 50%;
+        }
+
+        /*Bar Style*/
+
+        .slider{
+            width: 100%;
+            height: 5px;
+            display: block;
+            background: #ccc;
+            margin-top: 1px;
+            border-radius: 5px;
+        }
+
+        .slider .bar{
+            width: 25%;
+            height: 5px;
+            background: #FFFFFF;
+            border-radius: 5px;
+        }
+
+        /*Animations*/
+        .slidemenu label, .slider .bar {
+            transition: all 500ms ease-in-out;
+            -webkit-transition: all 500ms ease-in-out;
+            -moz-transition: all 500ms ease-in-out;
+        }
+
+        /*Toggle*/
+
+        .slidemenu .slide-toggle:checked + label {
+            opacity: 1;
+        }
+
+        .navbar-fixed {
+            position: fixed;
+            top : 30px;
+        }
+
+
+        .slidemenu #slide-item-1:checked ~ .slider .bar{ margin-left: 0; }
+        .slidemenu #slide-item-2:checked ~ .slider .bar{ margin-left: 25%; }
+        .slidemenu #slide-item-3:checked ~ .slider .bar{ margin-left: 50%; }
+        .slidemenu #slide-item-4:checked ~ .slider .bar{ margin-left: 75%; }
+
+        .list-group-item.active{
+            background-color: rgb(53,149,246);
+            border-color: rgb(53,149,246);
+        }
+
+        /*seungho*/
+        .popover{
+            max-width:100%;
+        }
+        /*seungho*/
+
+        .card-info {
+            float: left;
+            width: 33.33%;
+            padding: 0 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            margin-top:auto;
+        }
+
+
+
+        .img-thumb{
+            border-radius: 1.04166667vw;
+            width: 100%;
+            margin-bottom: 5px;
+            display: block;
+            vertical-align: top;
+
+        }
+
+        .study-content{
+            overflow: hidden;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 76px 60px 0;
+        }
+
+
+        @media (max-width: 1919px) and (min-width: 1441px) {
+            .card-info .img_thumb {
+                border-radius: 1.04166667vw;
+                border-top-left-radius: 1.04167vw;
+                border-top-right-radius: 1.04167vw;
+                border-bottom-right-radius: 1.04167vw;
+                border-bottom-left-radius: 1.04167vw;
+            }
+        }
+
+
+        .link-newsfeed{
+            display: block;
+            position: relative;
+        }
+
+        .tit_newsfeed {
+            display: block;
+            padding-top: 10px;
+            font-size: 20px;
+            line-height: 32px;
+            color: #1e1e1e;
+        }
+
+        .desc_newsfeed {
+            padding-top: 8px;
+            font-size: 14px;
+            line-height: 22px;
+            color: #666;
+        }
+
+
+    </style>
+
+</head>
+
+<div th:fragment="side-menu">
+    <nav>
+        <ul class="mcd-menu">
+            <li>
+                <a href="#" th:href="@{/}">
+                    <i class="fa fa-home"></i>
+                    <strong>Home</strong>
+                    <small>home</small>
+                </a>
+            </li>
+            <li>
+                <a href="" th:href="@{'/profile/' + ${#authentication.name}}">
+                    <i class="fa fa-edit"></i>
+                    <strong>Profile</strong>
+                    <small>View Profile </small>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{'/studyAfterLogin'}">
+                    <i class="fa fa-gift"></i>
+                    <strong>Study</strong>
+                    <small>View Studies</small>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{'/eventsAfterLogin'}">
+                    <i class="fa fa-globe"></i>
+                    <strong>Events</strong>
+                    <small>Joined Events</small>
+                </a>
+            </li>
+            <li>
+                <a href="#" th:href="@{/}" >
+                    <i class="fa fa-comments-o"></i>
+                    <strong>About Us</strong>
+                    <small>contact</small>
+                </a>
+                <ul>
+                    <li><a href="#"><i class="fa fa-globe"></i>Mission</a></li>
+                    <li>
+                        <a href="#"><i class="fa fa-group"></i>Our Team</a>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-female"></i>Leyla Sparks</a></li>
+                            <li>
+                                <a href="#"><i class="fa fa-male"></i>Gleb Ismailov</a>
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-leaf"></i>About</a></li>
+                                    <li><a href="#"><i class="fa fa-tasks"></i>Skills</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><i class="fa fa-female"></i>Viktoria Gibbers</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-trophy"></i>Rewards</a></li>
+                    <li><a href="#"><i class="fa fa-certificate"></i>Certificates</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="">
+                    <i class="fa fa-picture-o"></i>
+                    <strong>About us</strong>
+                    <small></small>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+
+<div th:fragment="main-nav" id="navdiv" style="overflow: visible">
+    <script th:inline="javascript">
+        window.onload = function() {
+
+            $("#slide-item-1").click(function(){
+                location.href="/mainAfterLogin";
+                // $(".container").load("/mainAfterLogin .container").hide().fadeIn()
+            })
+
+            $("#slide-item-2").click(function(){
+              location.href= "/profile/" +[[${account.nickname}]];
+            })
+
+            $("#slide-item-3").click(function(){
+              location.href="/studyAfterLogin";
+              // $(".container").load("/studyAfterLogin .main_visual").hide().fadeIn()
+            })
+
+            $("#slide-item-4").click(function(){
+              location.href="/eventsAfterLogin";
+              // $(".container").load("/eventsAfterLogin .container").hide().fadeIn()
+            })
+        }
+    </script>
+    <div class="row" style="max-height:60px;margin-left:20px; margin-right:20px; overflow: visible; display: flex">
+        <div class="d-flex align-content-center" style="height: 60px;">
+            <div class="d-flex" style="margin-top: auto; margin-bottom: auto;">
+                <a href="/" th:href="@{/}">
+                    <img src="/images/logo_white.png" width="150" height="30;">
+                </a>
+            </div>
+        </div>
+        <nav class="slidemenu">
+            <!-- Item 1 -->
+            <input type="radio" name="slideItem" id="slide-item-1" class="slide-toggle" checked/>
+            <label for="slide-item-1"><span>Home</span></label>
+
+            <input type="radio" name="slideItem" id="slide-item-2" class="slide-toggle"/>
+            <label for="slide-item-2"><span>Profile</span></label>
+            <!-- Item 3 -->
+            <input type="radio" name="slideItem" id="slide-item-3" class="slide-toggle"/>
+            <label for="slide-item-3"><span>Study</span></label>
+            <!-- Item 4 -->
+            <input type="radio" name="slideItem" id="slide-item-4" class="slide-toggle"/>
+            <label for="slide-item-4"><span>Events</span></label>
+            <div class="clear"></div>
+            <!-- Bar -->
+            <div class="slider">
+                <div class="bar"></div>
+            </div>
+        </nav>
+
+
+        <button class="button" id="button-4" style="width: 150px; height: 30px; margin-top:auto; margin-bottom: auto; border-radius: 20px; font-weight: 500;" th:href="@{/new-study}">
+            <div id="underline"></div>
+            <a style="color: black;" th:href="@{/new-study}">스터디 개설</a>
+        </button>
+
+        <div class="d-flex" sec:authorize="isAuthenticated()" style="height: 45px; margin-top: auto; margin-bottom: auto;">
+            <a class="link dropdown-toggle" href="#" id="userDropdown2" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+                     width="45" height="45" class="rounded border bg-light"></svg>
+                <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+                     width="45" height="45" class="rounded border"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm-left" aria-labelledby="userDropdown2" style="z-index: 1; overflow: visible">
+                <h6 class="dropdown-header">
+                    <span sec:authentication="name">Username</span>
+                </h6>
+                <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                <a class="dropdown-item" >스터디</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                    <button class="dropdown-item" type="submit">로그아웃</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav th:fragment="main" class="navbar navbar-expand-sm bg-dark" >
+    <a class="navbar-brand" href="/" th:href="@{/}">
+        <img src="/images/logo_white.png" width="150" height="30">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-end" style="margin-left: auto;">
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link text-white" style="width: 80px;margin-right: 10px" th:href="@{/login}">로그인</a>
+            </li>
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link text-white" style="width: 80px;margin-right: 10px" th:href="@{/sign-up}">회원가입</a>
+            </li>
+
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown3" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+                         width="24" height="24" class="rounded border bg-light"></svg>
+                    <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+                         width="24" height="24" class="rounded border"/>
+                </a>
+                <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown3">
+                    <h6 class="dropdown-header">
+                        <span sec:authentication="name">Username</span>
+                    </h6>
+                    <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                    <a class="dropdown-item" >스터디</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                    <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                        <button class="dropdown-item" type="submit">로그아웃</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<footer th:fragment="footer">
+</footer>
+
+<div th:fragment="settings-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#" th:href="@{/settings/profile}">프로필</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#" th:href="@{/settings/password}">패스워드</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active" href="#" th:href="@{/settings/notifications}">알림</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#" th:href="@{/settings/tags}">관심 주제</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active" href="#" th:href="@{/settings/zones}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+</div>
+
+<script type="application/javascript" th:fragment="form-validation">
+    (function () {
+        'use strict';
+
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+    }())
+</script>
+
+<head th:fragment="login-head">
+    <meta charset="UTF-8">
+    <title>STUDICON</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+    <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css">
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+    <style>
+        .container {
+            max-width: 100%;
+        }
+
+        .tagify-outside{
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        #study-logo {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        #study-logo img {
+            height: auto;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        body,
+        input,
+        button,
+        select,
+        optgroup,
+        textarea,
+        .tooltip,
+        .popover {
+            font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        table th {
+            font-weight: lighter;
+        }
+
+        mark {
+            padding: 0;
+            background: transparent;
+            background: linear-gradient(to right, #f0ad4e 50%, transparent 50%);
+            background-position: right bottom;
+            background-size: 200% 100%;
+            transition: all .5s ease;
+            color: #fff;
+        }
+
+        mark.animate {
+            background-position: left bottom;
+            color: #000;
+        }
+
+        .jumbotron {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin-bottom: 0;
+            background-color: #fff;
+        }
+        @media (min-width: 768px) {
+            .jumbotron {
+                padding-top: 6rem;
+                padding-bottom: 6rem;
+            }
+        }
+
+        .jumbotron p:last-child {
+            margin-bottom: 0;
+        }
+
+        .jumbotron h1 {
+            font-weight: 300;
+        }
+
+        .jumbotron .container {
+            max-width: 40rem;
+        }
+    </style>
+</head>
+
+<script type="application/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
+    $(function() {
+        var csrfToken = /*[[${_csrf.token}]]*/ null;
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
+</script>
+
+<div th:fragment="study-banner" th:if="${study.useBanner}" class="row" id="study-logo">
+    <img th:src="${study.image}"/>
+</div>
+
+<nav th:fragment="index-nav" class="navbar navbar-expand-sm navbar-dark">
+<a class="navbar-brand" href="/" th:href="@{/}">
+    <img src="/images/logo_white.png" width="150" height="30">
+</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav justify-content-end" style="margin-left: auto;">
+        <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link text-white" style="width: 80px;margin-right: 10px" th:href="@{/login}">로그인</a>
+        </li>
+        <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link text-white" style="width: 80px;margin-right: 10px" th:href="@{/sign-up}">회원가입</a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/notifications}">
+            </a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link btn btn-outline-primary" th:href="@{/new-study}">
+                <i class="fa fa-plus" aria-hidden="true"></i> 스터디 개설
+            </a>
+        </li>
+        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+                     width="24" height="24" class="rounded border bg-light"></svg>
+                <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+                     width="24" height="24" class="rounded border"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
+                <h6 class="dropdown-header">
+                    <span sec:authentication="name">Username</span>
+                </h6>
+                <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                <a class="dropdown-item" >스터디</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                    <button class="dropdown-item" type="submit">로그아웃</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+</nav>
+
+<div th:fragment="study-info">
+    <div class="row pt-4 text-left justify-content-center bg-light">
+        <div class="col-6">
+            <a href="#" class="text-decoration-none" th:href="@{'/study/' + ${study.path}}">
+                <span class="h2" th:text="${study.title}" style="color: black !important;">스터디 이름</span>
+            </a>
+        </div>
+        <div class="col-4 text-right justify-content-end">
+                <span th:if="${!study.published}"
+                      class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+                      title="스터디 공개 준비중">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>DRAFT</button>
+                </span>
+            <!-- seungho -->
+            <div th:if="${study.closed}">
+                <div class="modal fade" id="certificate" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 988px; width: 988px;">
+                        <div class="modal-content d-flex" style="background-image: url(/images/certificate.png)">
+                            <!--                    <img src="/certificate.png" width="988px" height="626px;" style="position: static">-->
+                            <div class="modal-body d-flex flex-column" style="height: 626px; font-family: serif;">
+                                <div class="d-flex">  <div th:text="|http://www.thestudicon.com/study/${study.path}|"></div></div>
+                                <div class="d-flex justify-content-center" style="height: 280px;"> <div class="d-flex" th:text="${account.nickname}" style="margin-top: auto;"></div> </div>
+                                <div class="d-flex justify-content-center" style="height: 60px; align-items: flex-end;"> <div th:text="${study.title}"></div> </div>
+                                <div class="d-flex justify-content-center" style="height: 115px; align-items: flex-end;">
+                                    <div id="studyPublishedDateTime" class="d-flex col-6" th:text="${study.publishedDateTime}" style="justify-content: flex-end;"></div>
+                                    <div class="d-flex col-1"></div>
+                                    <div id="studyClosedDateTime" class="d-flex col-5" th:text="${study.closedDateTime}" style="justify-content:flex-start;"></div>
+                                </div>
+                                <div class="d-flex" th:text="${study.scoreAddress}" style="margin-left: 20px; height: 58px; align-items: flex-end; justify-content: center;"></div>
+                                <div class="d-flex" th:text="${study.closeStudyTxHash}" style="margin-left: 235px; justify-content: center; align-items: flex-end; height: 28px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+                <script type="application/javascript">
+                    $(function () {
+                        moment.locale('ko');
+                        let publishedDateTime = moment($("#studyPublishedDateTime").text(), "YYYY-MM-DD`T`hh:mm").format('LL');
+                        $("#studyPublishedDateTime").text(publishedDateTime);
+                        let closedDateTime = moment($("#studyClosedDateTime").text(), "YYYY-MM-DD`T`hh:mm").format('LL');
+                        $("#studyClosedDateTime").text(closedDateTime);
+                    })
+                </script>
+                <button class=" btn btn-sm btn-primary" data-toggle="modal" data-target="#certificate">수료증 발급</button>
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="스터디 종료함">
+                        <button class="btn btn-sm btn-primary" type="button" style="pointer-events: none;" disabled>CLOSED</button>
+                    </span>
+            </div>
+            <!-- seungho -->
+            <span th:if="${!study.recruiting}"
+                  class="d-inline-block ml-1" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="팀원 모집중 아님">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>OFF</button>
+                </span>
+            <span sec:authorize="isAuthenticated()" th:if="${study.isJoinable(#authentication.principal)}"
+                  class="btn-group" role="group" aria-label="Basic example">
+                    <!-- seungho -->
+                    <a id="requestJoinStudy" class="btn btn-primary" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="먼저 ICONEX 계좌를 선택하고 스터디에 참여합니다.">스터디 참여</a>
+                    <a id="joinStudy" class="btn btn-primary" th:href="@{'/study/' + ${study.path} + '/join'}" style="display:none;"></a>
+                <!-- seungho -->
+                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/members'}"
+                       th:text="${study.members.size()}">1</a>
+                </span>
+            <span sec:authorize="isAuthenticated()"
+                  th:if="${!study.closed && study.isMember(#authentication.principal)}" class="btn-group" role="group">
+                    <!-- seungho -->
+                    <a id="requestLeaveStudy" class="btn btn-outline-warning" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="먼저 ICONEX 계좌를 선택하고 스터디를 탈퇴합니다.">스터디 탈퇴</a>
+                    <a id="leaveStudy" class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/leave'}" style="display:none;"></a>
+                <!-- seungho -->
+                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/members'}"
+                       th:text="${study.members.size()}">1</a>
+                </span>
+            <span sec:authorize="isAuthenticated()"
+                  th:if="${study.published && !study.closed}">
+                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/new-event'}">
+                        <i class="fa fa-plus"></i> 모임 만들기
+                    </a>
+                </span>
+        </div>
+    </div>
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p class="lead" th:text="${study.shortDescription}"></p>
+        </div>
+    </div>
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p>
+                <span th:each="tag: ${study.tags}"
+                      class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+                    <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">
+                        <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
+                    </a>
+                </span>
+                <span th:each="zone: ${study.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">
+                    <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
+                        <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}">City</span>
+                    </a>
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- seungho -->
+    <!-- ICON SDK for Javascript -->
+    <script src="https://cdn.jsdelivr.net/gh/icon-project/icon-sdk-js@latest/build/icon-sdk-js.min.js"></script>
+    <script th:inline="javascript">
+
+        window.addEventListener("ICONEX_RELAY_RESPONSE", eventHandlerInStudyInfo, false);
+
+        let iconServiceInStudyInfo = window['icon-sdk-js'];
+        let IconAmountInStudyInfo = iconServiceInStudyInfo.IconAmount;
+        let IconConverterInStudyInfo = iconServiceInStudyInfo.IconConverter;
+        let IconBuilderInStudyInfo = iconServiceInStudyInfo.IconBuilder;
+
+        let requestScoreInStudyInfo;
+        let changeStatusInStudyInfo;
+        let fromAddressInStudyInfo;
+
+        if ([[${!study.isMember(#authentication.principal)}]]) {
+            requestScoreInStudyInfo = document.getElementById("requestJoinStudy");
+        }
+        else {
+            requestScoreInStudyInfo = document.getElementById("requestLeaveStudy");
+        }
+
+        if (requestScoreInStudyInfo != null) {
+            requestScoreInStudyInfo.onclick = function() {
+                if (fromAddressInStudyInfo == null) { getAddressInStudyInfo(); }
+                else { callScoreInStudyInfo(); }
+            }
+        }
+
+        function getAddressInStudyInfo() {
+            window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                detail: {
+                    type: 'REQUEST_ADDRESS'
+                }
+            }));
+        }
+
+        function callScoreInStudyInfo() {
+            let parsed;
+            if ([[${!study.isMember(#authentication.principal)}]]) {
+                changeStatusInStudyInfo = document.getElementById("joinStudy");
+                parsed = JSON.parse(setJoinStudyForm());
+            }
+            else {
+                changeStatusInStudyInfo = document.getElementById("leaveStudy");
+                parsed = JSON.parse(setLeaveStudyForm());
+            }
+            window.dispatchEvent(new CustomEvent('ICONEX_RELAY_REQUEST', {
+                detail: {
+                    type: 'REQUEST_JSON-RPC',
+                    payload: parsed
+                }
+            }));
+        }
+
+        function eventHandlerInStudyInfo(event) {
+            let type = event.detail.type;
+            let payload = event.detail.payload;
+            switch (type) {
+                case "RESPONSE_ADDRESS":
+                    fromAddressInStudyInfo = payload;
+                    break;
+                case "RESPONSE_JSON-RPC":
+                    if (changeStatusInStudyInfo != null) { changeStatusInStudyInfo.click(); }
+                    break;
+                default:
+            }
+        }
+
+        function setJoinStudyForm() {
+            let callTransactionBuilder = new IconBuilderInStudyInfo.CallTransactionBuilder;
+            let callTransactionData = callTransactionBuilder
+                .version(IconConverterInStudyInfo.toBigNumber(3))
+                .from(fromAddressInStudyInfo)
+                .to([[${study.scoreAddress}]])
+                .stepLimit(IconConverterInStudyInfo.toBigNumber(1000000))
+                .timestamp((new Date()).getTime() * 1000)
+                .nid(IconConverterInStudyInfo.toBigNumber(3))
+                .method('joinStudy')
+                .value(IconAmountInStudyInfo.of([[${study.initDeposit}]], IconAmountInStudyInfo.Unit.ICX).toLoop())
+                .params({
+                    "_accountId": IconConverterInStudyInfo.toHex([[${account.id}]])
+                })
+                .build();
+            let scoreData = JSON.stringify({
+                "jsonrpc": "2.0",
+                "method": "icx_sendTransaction",
+                "params": IconConverterInStudyInfo.toRawTransaction(callTransactionData),
+                "id": 1234
+            });
+            return scoreData;
+        }
+
+        function setLeaveStudyForm() {
+            let callTransactionBuilder = new IconBuilderInStudyInfo.CallTransactionBuilder;
+            let callTransactionData = callTransactionBuilder
+                .version(IconConverterInStudyInfo.toBigNumber(3))
+                .from(fromAddressInStudyInfo)
+                .to([[${study.scoreAddress}]])
+                .stepLimit(IconConverterInStudyInfo.toBigNumber(1000000))
+                .timestamp((new Date()).getTime() * 1000)
+                .nid(IconConverterInStudyInfo.toBigNumber(3))
+                .method('leaveStudy')
+                .params({
+                    "_accountId": v.toHex([[${account.id}]])
+                })
+                .build();
+            let scoreData = JSON.stringify({
+                "jsonrpc": "2.0",
+                "method": "icx_sendTransaction",
+                "params": IconConverterInStudyInfo.toRawTransaction(callTransactionData),
+                "id": 1234
+            });
+            return scoreData;
+        }
+    </script>
+    <!-- seungho -->
+</div>
+
+<div th:fragment="study-menu (studyMenu)" class="row px-3 justify-content-center bg-light">
+    <nav class="col-10 nav nav-tabs">
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'info'}? active" th:href="@{'/study/' + ${study.path}}">
+            <i class="fa fa-info-circle"></i> 소개
+        </a>
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'members'}? active" th:href="@{'/study/' + ${study.path} + '/members'}">
+            <i class="fa fa-user"></i> 구성원
+        </a>
+        <a class="nav-item nav-link" th:classappend="${studyMenu == 'events'}? active" href="#" th:href="@{'/study/' + ${study.path} + '/events'}">
+            <i class="fa fa-calendar"></i> 모임
+        </a>
+        <a sec:authorize="isAuthenticated()" th:if="${study.isManager(#authentication.principal)}"
+           class="nav-item nav-link" th:classappend="${studyMenu == 'settings'}? active" href="#" th:href="@{'/study/' + ${study.path} + '/settings/description'}">
+            <i class="fa fa-cog"></i> 설정
+        </a>
+    </nav>
+</div>
+
+<div th:fragment="member-list (members, isManager)" class="row px-3 justify-content-center">
+    <ul class="list-unstyled col-10">
+        <li class="media mt-3" th:each="member: ${members}">
+            <svg th:if="${#strings.isEmpty(member?.profileImage)}" th:data-jdenticon-value="${member.nickname}" width="64" height="64" class="rounded border bg-light mr-3"></svg>
+            <img th:if="${!#strings.isEmpty(member?.profileImage)}" th:src="${member?.profileImage}" width="64" height="64" class="rounded border mr-3"/>
+            <div class="media-body" style="margin-top: auto; margin-bottom: auto;">
+                <h5 class="mt-0 mb-1"><span th:text="${member.nickname}"></span> <span th:if="${isManager}" class="badge badge-primary">관리자</span></h5>
+                <span th:text="${member.bio}"></span>
+            </div>
+            <!-- seungho -->
+            <button id="requestPayBack" class="btn btn-outline-info" th:if="${(member.id==account.id) && (study.closed)}" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="먼저 ICONEX 계좌를 선택하고 보증금을 환급합니다.">환급</button>
+            <a id="payBack" href="javascript:window.location.href=window.location.href" style="display:none;"></a>
+            <button id="memberDeposit" class="btn btn-info" th:if="${(member.id==account.id)}" type="button" data-toggle="popover" data-placement="right" data-html="true" title="잔여 보증금">잔여 보증금</button>
+            <!-- seungho -->
+        </li>
+    </ul>
+</div>
+
+<div th:fragment="study-settings-menu (currentMenu)" class="list-group" style="text-align: center !important;">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'description'}? active"
+       href="#" th:href="@{'/study/' + ${study.path} + '/settings/description'}">소개</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'image'}? active"
+       href="#" th:href="@{'/study/' + ${study.path} + '/settings/banner'}">배너 이미지</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active"
+       href="#" th:href="@{'/study/' + ${study.path} + '/settings/tags'}">스터디 주제</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active"
+       href="#" th:href="@{'/study/' + ${study.path} + '/settings/zones'}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'study'}? active"
+       href="#" th:href="@{'/study/' + ${study.path} + '/settings/study'}">스터디</a>
+</div>
+
+<div th:fragment="editor-script">
+    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            $('.editor').summernote({
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+                placeholder: '스터디의 목표, 일정, 진행 방식, 사용할 교재 또는 인터넷 강좌 그리고 모집중인 스터디원 등 스터디에 대해 자세히 적어 주세요.',
+                tabsize: 2,
+                height: 300
+            });
+        });
+    </script>
+</div>
+
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+    <span th:text="${message}">완료</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<script th:fragment="tooltip" type="application/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
+
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+<script type="application/javascript" th:inline="javascript">
+    $(function() {
+        var studyPath = "[(${study.path})]";
+        function tagRequest(url, tagTitle) {
+            $.ajax({
+                dataType: "json",
+                autocomplete: {
+                    enabled: true,
+                    rightKey: true,
+                },
+                contentType: "application/json; charset=utf-8",
+                method: "POST",
+                url: "/study/" + studyPath + "/settings/tags" + url,
+                data: JSON.stringify({'tagTitle': tagTitle})
+            }).done(function (data, status) {
+                console.log("${data} and status is ${status}");
+            });
+        }
+
+        function onAdd(e) {
+            tagRequest("/add", e.detail.data.value);
+        }
+
+        function onRemove(e) {
+            tagRequest("/remove", e.detail.data.value);
+        }
+
+        var tagInput = document.querySelector("#tags");
+        var tagify = new Tagify(tagInput, {
+            pattern: /^.{0,20}$/,
+            whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+            dropdown : {
+                enabled: 1, // suggest tags after a single character input
+            } // map tags
+        });
+        tagify.on("add", onAdd);
+        tagify.on("remove", onRemove);
+        // add a class to Tagify's input element
+        tagify.DOM.input.classList.add('form-control');
+        // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+    });
+</script>
+
+<div th:fragment="update-tags (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript" th:inline="javascript">
+        $(function() {
+            function tagRequest(url, tagTitle) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'tagTitle': tagTitle})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            var tagInput = document.querySelector("#tags");
+            var tagify = new Tagify(tagInput, {
+                pattern: /^.{0,20}$/,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                dropdown : {
+                    enabled: 1, // suggest tags after a single character input
+                } // map tags
+            });
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+            // add a class to Tagify's input element
+            tagify.DOM.input.classList.add('form-control');
+            // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+        });
+    </script>
+</div>
+
+<div th:fragment="update-zones (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            function tagRequest(url, zoneName) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'zoneName': zoneName})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            var tagInput = document.querySelector("#zones");
+
+            var tagify = new Tagify(tagInput, {
+                enforceWhitelist: true,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                dropdown : {
+                    enabled: 1, // suggest tags after a single character input
+                } // map tags
+            });
+
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+
+            // add a class to Tagify's input element
+            tagify.DOM.input.classList.add('form-control');
+            // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+        });
+    </script>
+</div>
+
+<div th:fragment="date-time">
+    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            moment.locale('ko');
+            $(".date-time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLL');
+            });
+            $(".date").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LL');
+            });
+            $(".weekday").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('dddd');
+            });
+            $(".time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LT');
+            });
+            $(".calendar").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").calendar();
+            });
+            $(".fromNow").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").fromNow();
+            });
+            $(".date-weekday-time").text(function(index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLLL');
+            });
+        })
+    </script>
+</div>
+
+<div th:fragment="event-form (mode, action)">
+    <div class="py-5 text-center">
+        <h2>
+            <a th:href="@{'/study/' + ${study.path}}"><span th:text="${study.title}">스터디</span></a> /
+            <span th:if="${mode == 'edit'}" th:text="${event.title}"></span>
+            <span th:if="${mode == 'new'}">새 모임 만들기</span>
+        </h2>
+    </div>
+    <div class="row justify-content-center">
+        <form class="needs-validation col-sm-10"
+              th:action="@{${action}}"
+              th:object="${eventForm}" method="post" novalidate>
+            <div class="form-group">
+                <label for="title">모임 이름</label>
+                <input id="title" type="text" th:field="*{title}" class="form-control"
+                       placeholder="모임 이름" aria-describedby="titleHelp" required>
+                <small id="titleHelp" class="form-text text-muted">
+                    모임 이름을 50자 이내로 입력하세요.
+                </small>
+                <small class="invalid-feedback">모임 이름을 입력하세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</small>
+            </div>
+            <div class="form-group" th:if="${mode == 'new'}">
+                <label for="eventType">모집 방법</label>
+                <select th:field="*{eventType}"  class="custom-select mr-sm-2" id="eventType" aria-describedby="eventTypeHelp">
+                    <option th:value="FCFS">선착순</option>
+                    <option th:value="CONFIRMATIVE">관리자 확인</option>
+                </select>
+                <small id="eventTypeHelp" class="form-text text-muted">
+                    두가지 모집 방법이 있습니다.<br/>
+                    <strong>선착순</strong>으로 모집하는 경우, 모집 인원 이내의 접수는 자동으로 확정되며, 제한 인원을 넘는 신청은 대기 신청이 되며 이후에 확정된 신청 중에 취소가 발생하면 선착순으로 대기 신청자를 확정 신청자도 변경합니다. 단, 등록 마감일 이후에는 취소해도 확정 여부가 바뀌지 않습니다.<br/>
+                    <strong>확인</strong>으로 모집하는 경우, 모임 및 스터디 관리자가 모임 신청 목록을 조회하고 직접 확정 여부를 정할 수 있습니다. 등록 마감일 이후에는 변경할 수 없습니다.
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="title">주제</label>
+                <input id="theme" type="text" th:field="*{theme}" class="form-control"
+                       placeholder="주제" aria-describedby="titleHelp" required>
+                <small id="titleHelp" class="form-text text-muted">
+                    주제를 입력해주세요.
+                </small>
+                <small class="invalid-feedback">주제를 입력해주세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{theme}">Error</small>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="limitOfEnrollments">모집 인원</label>
+                    <input id="limitOfEnrollments" type="number" th:field="*{limitOfEnrollments}" class="form-control" placeholder="0"
+                           aria-describedby="limitOfEnrollmentsHelp">
+                    <small id="limitOfEnrollmentsHelp" class="form-text text-muted">
+                        최대 수용 가능한 모임 참석 인원을 설정하세요. 최소 2인 이상 모임이어야 합니다.
+                    </small>
+                    <small class="invalid-feedback">모임 신청 마감 일시를 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('limitOfEnrollments')}" th:errors="*{limitOfEnrollments}">Error</small>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="endEnrollmentDateTime">등록 마감 일시</label>
+                    <input id="endEnrollmentDateTime" type="datetime-local" th:field="*{endEnrollmentDateTime}" class="form-control"
+                           aria-describedby="endEnrollmentDateTimeHelp" required>
+                    <small id="endEnrollmentDateTimeHelp" class="form-text text-muted">
+                        등록 마감 이전에만 스터디 모임 참가 신청을 할 수 있습니다.
+                    </small>
+                    <small class="invalid-feedback">모임 신청 마감 일시를 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('endEnrollmentDateTime')}" th:errors="*{endEnrollmentDateTime}">Error</small>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="startDateTime">모임 시작 일시</label>
+                    <input id="startDateTime" type="datetime-local" th:field="*{startDateTime}" class="form-control"
+                           aria-describedby="startDateTimeHelp" required>
+                    <small id="startDateTimeHelp" class="form-text text-muted">
+                        모임 시작 일시를 입력하세요. 상세한 모임 일정은 본문에 적어주세요.
+                    </small>
+                    <small class="invalid-feedback">모임 시작 일시를 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('startDateTime')}" th:errors="*{startDateTime}">Error</small>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="startDateTime">모임 종료 일시</label>
+                    <input id="endDateTime" type="datetime-local" th:field="*{endDateTime}" class="form-control"
+                           aria-describedby="endDateTimeHelp" required>
+                    <small id="endDateTimeHelp" class="form-text text-muted">
+                        모임 종료 일시가 지나면 모임은 자동으로 종료 상태로 바뀝니다.
+                    </small>
+                    <small class="invalid-feedback">모임 종료 일시를 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('endDateTime')}" th:errors="*{endDateTime}">Error</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">모임 설명</label>
+                <textarea id="description" type="textarea" th:field="*{description}" class="editor form-control"
+                          placeholder="모임을 자세히 설명해 주세요." aria-describedby="descriptionHelp" required></textarea>
+                <small id="descriptionHelp" class="form-text text-muted">
+                    모임에서 다루는 주제, 장소, 진행 방식 등을 자세히 적어 주세요.
+                </small>
+                <small class="invalid-feedback">모임 설명을 입력하세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Error</small>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit"
+                        aria-describedby="submitHelp" th:text="${mode == 'edit' ? '모임 수정' : '모임 만들기'}">모임 수정</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
+    <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
+       class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <small class="text-muted" th:text="${noti.title}">Noti title</small>
+            <small class="fromNow text-muted" th:text="${noti.createdDateTime}">3 days ago</small>
+        </div>
+        <p th:text="${noti.message}" class="text-left mb-0 mt-1">message</p>
+    </a>
+</ul>
+
+<!--    <form th:action="@{/search/study}" class="form-inline" method="get">-->
+<!--        <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기" aria-label="Search" />-->
+<!--    </form>-->
+
+<div th:fragment="study-list (studyList)" class="d-flex col-12" style="flex-wrap: wrap; width: 80%; margin-left: auto; margin-right: auto;">
+    <div th:each="study: ${studyList}" style="flex-wrap: wrap; justify-content: center; margin-top: 20px;" class="d-flex col-3">
+        <div class="card d-flex" style="filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); border-radius: 20px;">
+            <div th:if="${study.useBanner}">
+                <img style="height: 150px;" class="card-img-top img-thumb" th:src="${study.image}" alt="Card image cap"/>
+            </div>
+            <div th:if="${!study.useBanner}">
+                <img style="height: 150px;" class="card-img-top img-thumb" src="https://t1.kakaocdn.net/kakaocorp/admin/co/main-content/4540.jpg" alt="Card image cap">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title tit_newsfeed" th:text="${study.title}" style="text-align: left;"></h5>
+                <p class="card-text" th:text="${study.shortDescription}" style="text-align: left;"></p>
+                <a th:href="@{'/study/' + ${study.path}}" class="btn" style="background-color: #17a2b8; color: white; width: 80px; float: left;">조희</a>
+                <div style="float: right;">
+                    <small class="text-muted">
+                        <i class="fa fa-user-circle"></i>
+                        <span th:text="${study.memberCount}"></span> 명
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    <div th:each="study: ${studyList}" style="width: 100%">-->
+    <!--            <div class="card-info">-->
+    <!--                <a th:href="@{'/study/' + ${study.path}}" class="text-decoration-none">-->
+    <!--                    &lt;!&ndash;-->
+    <!--                <img th:src="${study.image}" class="img-thumb" th:alt="${study.title}">-->
+    <!--                &ndash;&gt;-->
+    <!--                    <img src="https://t1.kakaocdn.net/kakaocorp/admin/co/main-content/4540.jpg" class="img-thumb" alt="">-->
+    <!--                    <strong th:text="${study.title}" class="tit_newsfeed"></strong>-->
+    <!--                    <p th:text="${study.shortDescription}" class="desc_newsfeed">Short description</p>-->
+    <!--                    <p>-->
+
+    <!--                        <span th:each="tag: ${study.tags}" class="font-weight-light text-monospace badge badge-pill badge-info mr-3">-->
+    <!--                            <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">-->
+    <!--                                <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>-->
+    <!--                            </a>-->
+    <!--                        </span>-->
+
+    <!--                    <span th:each="zone: ${study.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">-->
+    <!--                                    <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">-->
+    <!--                                        <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}" class="text-white">City</span>-->
+    <!--                                    </a>-->
+    <!--                                </span>-->
+    <!--                </p>-->
+    <!--                    <div class="d-flex justify-content-between align-items-center">-->
+    <!--                        <small class="text-muted">-->
+    <!--                            <i class="fa fa-user-circle"></i>-->
+    <!--                            <span th:text="${study.memberCount}"></span>명-->
+    <!--                        </small>-->
+    <!--                        <small class="text-muted date" th:text="${study.publishedDateTime}">9 mins</small>-->
+    <!--                    </div>-->
+    <!--                </a>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+</html>

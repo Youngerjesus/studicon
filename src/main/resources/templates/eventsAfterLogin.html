@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<style>
+    .card-info {
+        float: left;
+        width: 33.33%;
+        padding: 0 20px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        margin-top:auto;
+    }
+
+
+
+    .img-thumb{
+        border-radius: 1.04166667vw;
+        width: 100%;
+        margin-bottom: 5px;
+        display: block;
+        vertical-align: top;
+
+    }
+
+    .study-content{
+        overflow: hidden;
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 76px 60px 0;
+    }
+
+
+    @media (max-width: 1919px) and (min-width: 1441px) {
+        .card-info .img_thumb {
+            border-radius: 1.04166667vw;
+            border-top-left-radius: 1.04167vw;
+            border-top-right-radius: 1.04167vw;
+            border-bottom-right-radius: 1.04167vw;
+            border-bottom-left-radius: 1.04167vw;
+        }
+    }
+
+
+    .link-newsfeed{
+        display: block;
+        position: relative;
+    }
+
+    .tit_newsfeed {
+        display: block;
+        padding-top: 10px;
+        font-size: 20px;
+        line-height: 32px;
+        color: #1e1e1e;
+    }
+
+    .desc_newsfeed {
+        padding-top: 8px;
+        font-size: 14px;
+        line-height: 22px;
+        color: #666;
+    }
+
+</style>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+    <div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}" style="margin-bottom: 0rem;">
+        STUDICON 가입을 완료하려면 <a href="#" th:href="@{/check-email(email=${account.email})}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+    </div>
+    <div class="container d-flex" style="background-color: white;">
+        <div class="d-flex" style="width: 15%; background-color: currentColor;">
+            <a href="http://www.skkrypto.com/">
+                <img  src="/images/skkrypto.png" width="90%" height="90%" style="display: flex; margin-left: auto; margin-right: auto; cursor: pointer;">
+            </a>
+        </div>
+        <div class="d-flex" style="width: 85%;">
+            <div class="d-flex fluid flex-fill pt-3 px-3 pt-md-4 px-md-4" style="flex-direction: column;">
+                <div th:if="${#lists.isEmpty(enrollmentList)}" class="d-flex" style="height: 50px; width: 80%; margin-left: auto; margin-right: auto; color: #3e3a39; font-size: 25px; font-weight: 900;">
+                    참석할 모임이 없습니다.
+                </div>
+                <div th:if="${!#lists.isEmpty(enrollmentList)}"class="d-flex" style="height: 50px; width: 100%; margin-left: auto; margin-right: auto; color: #3e3a39; font-size: 25px; font-weight: 900;">
+                    참석할 모임
+                </div>
+                <div class="d-flex" th:if="${!#lists.isEmpty(enrollmentList)}" style="width: 100%; margin-left: auto; margin-right: auto; flex-wrap: wrap;">
+                    <div class="d-flex col-12" style="margin-left: auto; margin-right: auto;">
+                        <div class="d-flex col-3" th:each="enrollment: ${enrollmentList}" style="margin-left: auto; margin-right: auto;">
+                            <div class="card d-flex" style="filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); border-radius: 20px;">
+                                <div th:if="${enrollment.event.study.useBanner}">
+                                    <img style="height: 150px;" class="card-img-top img-thumb" th:src="${enrollment.event.study.image}" alt="Card image cap"/>
+                                </div>
+                                <div th:if="${!enrollment.event.study.useBanner}">
+                                    <img style="height: 150px;" class="card-img-top img-thumb" src="https://t1.kakaocdn.net/kakaocorp/admin/co/main-content/4540.jpg" alt="Card image cap">
+                                </div>
+                                <div class="card-body">
+                                    <strong class="tit_newsfeed" th:text="'모임: '+${enrollment.event.title}">Event title</strong>
+                                    <strong class="tit_newsfeed" th:text="'스터디: '+${enrollment.event.study.title}">Study title</strong>
+                                    <p style="margin-bottom: 0.5rem; padding-top: 10px;">
+                                        <span style="white-space: nowrap; font-size: 12px;">
+                                        <i class="fa fa-calendar-o"> 시작 시간: </i>
+                                        <span class="calendar" th:text="${enrollment.event.getStartEnrollmentDate()}">Last updated 3 mins ago</span>
+                                        </span>
+                                    </p>
+                                    <p style="margin-bottom: 0.5rem;">
+                                        <span style="white-space: nowrap; font-size: 12px;">
+                                        <i class="fa fa-calendar-o"> 종료 시간: </i>
+                                        <span class="calendar" th:text="${enrollment.event.getEndEnrollmentDate()}">Last updated 3 mins ago</span>
+                                        </span>
+                                    </p>
+                                    <div class="d-flex" style="justify-content: center">
+                                        <a th:href="@{'/study/' + ${enrollment.event.study.path} + '/events/' + ${enrollment.event.id}}" style="width: 40%;"
+                                           class="card-link btn btn-outline-primary btn-sm my-1">모임 조회
+                                        </a>
+                                        <a th:href="@{'/study/' + ${enrollment.event.study.path}}"
+                                           class="card-link btn btn-outline-primary btn-sm my-1" style="width: 40%;">스터디 조회</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

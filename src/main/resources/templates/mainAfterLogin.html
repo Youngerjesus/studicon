@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<style>
+    .wrap {
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+    }
+
+    .header {
+        height: 65px;
+        background-color: #00c73c;
+    }
+
+    .tablist {
+        height: 500px;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
+        background-color: white;
+    }
+
+    .content {
+        display: flex;
+        flex: 1;
+    }
+    .aside {
+        display: flex;
+        flex: none;
+        width: 400px;
+        background-color: #FFFFFF;
+    }
+    .main{
+        display: flex;
+        flex: 1;
+        overflow: auto;
+    }
+
+    #divselect {
+
+    }
+</style>
+
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+<div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}" style="margin-bottom: 0rem;">
+    STUDICON 가입을 완료하려면 <a href="#" th:href="@{/check-email(email=${account.email})}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+</div>
+<div class="container text-center" style="width : 100%;height: 100%; padding:0px">
+    <video id = "video" muted autoplay loop>
+        <source src="/images/home_video_1.mp4" type="video/mp4">
+    </video>
+    <!--<div class="col-sm-10">
+        <img src="/images/main_img1.png" style="width: 100%; background-size: cover; object-fit: cover; z-index:0;">
+    </div>-->
+</div>
+    <div th:replace="fragments.html :: footer"></div>
+    <div th:replace="fragments.html :: date-time"></div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+    <div th:replace="fragments.html :: main-nav"></div>
+    <div th:replace="fragments.html :: study-banner"></div>
+    <div class="container">
+        <div th:replace="fragments.html :: study-info"></div>
+        <div th:replace="fragments.html :: study-menu(studyMenu='info')"></div>
+
+        <div class="row px-3 justify-content-center">
+            <!-- seungho -->
+            <div class="col-8 pt-3 left">
+                <button type="button" class="btn btn-success" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="스터디 보증금입니다." th:text="|${study.initDeposit} ICX|" ></button>
+                <button type="button" class="btn btn-danger" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="결석 시 패널티입니다." th:text="|${study.attendPenalty} ICX|" ></button>
+                <button type="button" class="btn btn-warning" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="과제 미완료 시 패널티입니다." th:text="|${study.homeworkPenalty} ICX|"></button>
+                <button class="btn btn-outline-info" th:if="${study.scoreAddress!=null}" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="스마트 컨트랙트 주소입니다." th:text="|${study.scoreAddress}|"></button>
+            </div>
+            <div class="col-2 pt-3 text-right">
+                <a id="studyInfo" class="btn btn btn-info" th:if="${study.scoreAddress!=null}" th:href="@{https://bicon.tracker.solidwallet.io/contract/} + ${study.scoreAddress}" target="popup">더 알아보기</a>
+            </div>
+            <div class="col-10 pt-3" th:utext="${study.fullDescription}"></div>
+            <!-- seungho -->
+        </div>
+
+        <div th:replace="fragments.html :: footer"></div>
+    </div>
+    <script th:replace="fragments.html :: tooltip"></script>
+</body>
+</html>
