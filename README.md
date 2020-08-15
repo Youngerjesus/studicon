@@ -1,4 +1,4 @@
-<img src="http://www.thestudicon.com/images/logo_sm.png" alt="Logo" width="100%" height="100"/>
+<img src="http://www.thestudicon.com/images/logo_sm.png" alt="Logo" width="100%" height="150"/>
 
 ## ➤ Inspiration
 _____ 
