@@ -75,7 +75,7 @@ public class StudyService {
         HttpProvider httpProvider = new HttpProvider("https://bicon.net.solidwallet.io/api/v3");
         IconService iconService = new IconService(httpProvider);
         BigInteger networkId = new BigInteger("3");
-        Wallet wallet = KeyWallet.load(new Bytes("0xb7a7f8c25301cd4a630fdb4f9b61c0d879ca7d6b9e67059a65fc2ccb1c0c2d8c"));
+        Wallet wallet = KeyWallet.load(new Bytes("0xdf84191aac30f77c3a0ec284476fa318e21ee93ca15df935eb076397ffeb8d5a"));
         long timestamp = System.currentTimeMillis() * 1000L;
 
         RpcObject paramsDeploy = new RpcObject.Builder()
