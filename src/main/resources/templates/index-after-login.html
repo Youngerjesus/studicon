@@ -40,25 +40,27 @@
 <!--    </video>-->
 <!--</div>-->
 
-<div class="container text-center" style="width : 100%; height: 100%; padding:0px">
-    <video muted autoplay loop width="100%" id="desk-video">
+<div id="desk-container" class="container text-center" style="width : 100%; height: 100%; padding:0px">
+    <video muted autoplay loop width="100%">
         <source src="/images/home_video_1.mp4" type="video/mp4">
     </video>
+</div>
 
-    <video muted autoplay loop width="100%" id="mobile-video" >
+<div id="mobile-container" class="container text-center" style="width : 100%; height: 100%; padding:0px">
+    <video muted autoplay loop width="100%">
         <source src="/images/home-video-2.mp4" type="video/mp4">
     </video>
-
-    <script type="application/javascript">
-        $(function () {
-            if(window.screen.width >= 768){
-              $('#mobile-video').css('display','none');
-            }else{
-              $('#desk-video').css('display','none');
-            }
-        });
-    </script>
 </div>
+
+<script type="application/javascript">
+  $(function () {
+    if(window.screen.width >= 768){
+      $('#mobile-container').css('display','none');
+    }else{
+      $('#desk-container').css('display','none');
+    }
+  });
+</script>
 
 </body>
 </html>
