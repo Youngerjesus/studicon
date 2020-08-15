@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments.html :: head"></head>
 <body class="bg-white">
-<div th:replace="fragments.html :: index-nav"></div>
+<div th:replace="fragments.html :: index-nav-2"></div>
 <div style="height:100%">
     <section class="jumbotron text-center d-none d-md-block" style="background: transparent">
         <video id="video" muted autoplay loop>
@@ -19,7 +19,7 @@
         <p>
         <div class="button" id="button-4" style="border: 1px solid white; margin: auto;">
             <div id="underline"></div>
-            <a href="@{/login}" style="color: white;">로그인</a>
+            <a href="/login" style="color: white;">로그인</a>
         </div>
         <!--<a th:href="@{/sign-up}" class="btn btn-light my-2">회원 가입</a>-->
         </p>

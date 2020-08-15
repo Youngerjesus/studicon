@@ -1,11 +1,125 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments.html :: head"></head>
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--<head th:replace="fragments.html :: head"></head>-->
+<title>STUDICON</title>
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+<link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic:wght@800&display=swap" rel="stylesheet">
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+
+<style>
+    .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        height : 100%;
+        max-width: 100%;
+        vertical-align: middle;
+    }
+
+    #study-logo img {
+        height: auto;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    }
+
+    table th {
+        font-weight: lighter;
+    }
+
+    mark {
+        padding: 0;
+        background: transparent;
+        background: linear-gradient(to right, #f0ad4e 50%, transparent 50%);
+        background-position: right bottom;
+        background-size: 200% 100%;
+        transition: all .5s ease;
+        color: #fff;
+    }
+
+    mark.animate {
+        background-position: left bottom;
+        color: #000;
+    }
+
+
+    @media (min-width: 768px) {
+        .jumbotron {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+    }
+
+    .jumbotron p:last-child {
+        margin-bottom: 0;
+    }
+
+    .jumbotron h1 {
+        font-weight: 300;
+    }
+
+    .jumbotron .container {
+        max-width: 40rem;
+
+    }
+
+    #video{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+
+        z-index: -1000;
+        overflow: hidden;
+        background-size: cover;
+    }
+    a {
+        color: black;
+        text-decoration: none;
+        letter-spacing: 1px;
+    }
+
+    a:hover{
+        text-decoration: none;
+        color: black;
+    }
+
+    #button-4 {
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    #button-4 a {
+        position: relative;
+        transition: all .45s ease-Out;
+    }
+
+    #button-4:hover #underline {
+        left: 0;
+    }
+
+    <!--side-menu css -->
+    body {
+        background: #EEE;
+        overflow-x:hidden;
+    }
+</style>
 <body class="bg-light">
-<video id = "video" muted autoplay loop>
-    <source src="/images/index_video.mp4" type="video/mp4">
+<video id="video" muted autoplay loop>
+    <source src="/images/index_video2.mp4" type="video/mp4">
 </video>
+
 <div th:replace="fragments.html :: index-nav"></div>
 <div class="container">
     <div class="py-5 text-center">
@@ -20,7 +134,7 @@
                 확인 후 다시 입력하시거나, <a href="#" th:href="@{/find-passsword}">패스워드 찾기</a>를 이용하세요.
             </p>
         </div>
-        <form class="needs-validation col-sm-3" action="/login" th:action="@{/login}" method="post" novalidate style="width:25%">
+        <form id="loginForm" class="needs-validation col-sm-3" th:action="@{/login}" method="post" novalidate style="width:25%">
             <div class="form-group">
                 <label for="username" class="text-light">이메일 또는 닉네임</label>
                 <input id="username" type="text" name="username" class="form-control"
@@ -44,11 +158,7 @@
                 <label class="form-check-label text-light" for="rememberMe" aria-describedby="rememberMeHelp">로그인 유지</label>
             </div>
             <div class="form-group">
-                <button class="btn btn-info btn-block" type="submit"
-                        aria-describedby="submitHelp">로그인</button>
-                <small id="submitHelp" class="form-text text-warning">
-                    STUDICON에 처음 오신거라면 <a href="#" th:href="@{/sign-up}">계정을 먼저 만드세요.</a>
-                </small>
+                <input class="btn btn-info btn-block" type="submit" value="로그인"/>
             </div>
         </form>
     </div>
