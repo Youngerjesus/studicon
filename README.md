@@ -37,8 +37,22 @@ Difficult to prove participation of study group
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#what-it-does)
 
-## ➤ What it does
-
+## ➤ Usage 
+--- 
+:	import project
+```
+    git clone https://github.com/Youngerjesus/studicon.git
+```
+:	edit application-dev.properties & application.properties
+```
+   app.host=http://localhost:8080
+   server.port=8080
+```
+:	create jar file  
+```
+   mvn package 
+```
+### 
 
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#how-i-built-it)
