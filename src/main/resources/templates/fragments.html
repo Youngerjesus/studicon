@@ -1930,8 +1930,8 @@
 <!--        <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기" aria-label="Search" />-->
 <!--    </form>-->
 
-<div th:fragment="study-list (studyList)" class="d-flex col-12" style="flex-wrap: wrap; width: 80%; margin-left: auto; margin-right: auto;">
-    <div th:each="study: ${studyList}" style="flex-wrap: wrap; justify-content: center; margin-top: 20px;" class="d-flex col-3">
+<div th:fragment="study-list (studyList)" class="d-flex col-xl-12 col-sm-12" style="flex-wrap: wrap; width: 80%; margin-left: auto; margin-right: auto;">
+    <div th:each="study: ${studyList}" style="flex-wrap: wrap; justify-content: center; margin-top: 20px;" class="card-container d-flex col-xl-4 col-sm-6">
         <div class="card d-flex" style="filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); border-radius: 20px;">
             <div th:if="${study.useBanner}">
                 <img style="height: 150px;" class="card-img-top img-thumb" th:src="${study.image}" alt="Card image cap"/>
@@ -1942,7 +1942,7 @@
             <div class="card-body">
                 <h5 class="card-title tit_newsfeed" th:text="${study.title}" style="text-align: left;"></h5>
                 <p class="card-text" th:text="${study.shortDescription}" style="text-align: left;"></p>
-                <a th:href="@{'/study/' + ${study.path}}" class="btn" style="background-color: #17a2b8; color: white; width: 80px; float: left;">조희</a>
+                <a th:href="@{'/study/' + ${study.path}}" class="btn" style="background-color: #17a2b8; color: white; width: 40%; float: left;">조희</a>
                 <div style="float: right;">
                     <small class="text-muted">
                         <i class="fa fa-user-circle"></i>

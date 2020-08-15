@@ -6,22 +6,49 @@
             width:100%;
             height: 100%;
         }
+
+        .video-container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .video-container video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+        }
     </style>
 
-<body class="bg-light">
+<body>
 <div th:replace="fragments.html :: main-nav"></div>
 <div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}">
     STUDICON 가입을 완료하려면 <a href="#" th:href="@{/check-email(email=${account.email})}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
 </div>
 
-<div class="container text-center" style="width : 100%;height: 100%; padding:0px">
-    <video id = "video" muted autoplay loop>
+<!--<div class="video-container">-->
+<!--    <video muted autoplay loop width="100%" class="d-none d-lg-block d-xl-block">-->
+<!--        <source src="/images/home_video_1.mp4" type="video/mp4">-->
+<!--    </video>-->
+
+<!--    <video muted autoplay loop playsinline width="1280" height="720" class="d-none d-sm-block"-->
+<!--           srcdesk="/images/home_video_1.mp4" srcmob="/images/home_video_1.mp4">-->
+<!--&lt;!&ndash;        <source src="/images/home_video_1.mp4" type="video/mp4">&ndash;&gt;-->
+<!--    </video>-->
+<!--</div>-->
+
+<div class="container text-center" style="width : 100%; height: 100%; padding:0px">
+    <video muted autoplay loop width="100%" class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+        <source src="/images/home_video_1.mp4" type="video/mp4">
+    </video>
+
+    <video muted autoplay loop playsinline width="1280" height="720" class="d-none d-sm-block d-md-none d-lg-none d-xl-none" srcdesk="/images/home_video_1.mp4" srcmob="/images/home_video_1.mp4">
         <source src="/images/home_video_1.mp4" type="video/mp4">
     </video>
 </div>
-
-<div th:replace="fragments.html :: footer"></div>
-<div th:replace="fragments.html :: date-time"></div>
 
 </body>
 </html>

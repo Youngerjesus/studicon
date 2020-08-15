@@ -25,6 +25,14 @@
         border: solid lightgray;
         border-radius: 20px;
     }
+
+    @media (min-width: 1600px) {
+        .card-container{
+            width: 25% !important;
+            max-width: 25% !important;
+            flex: 0 0 25%;
+        }
+    }
 </style>
 
 <body>
@@ -34,13 +42,14 @@
 </div>
 
 <div class="main_visual" style="background-color: currentColor; padding-left: 0; padding-right: 0;">
-    <div class="d-flex" style="flex-direction: row;">
-        <div class="d-flex" style="width: 15%;">
+    <div class="d-flex col-xl-12 col-sm-12" style="flex-direction: row;">
+        <div class="d-flex col-xl-2 col-sm-3">
             <a href="http://www.skkrypto.com/">
-                <img  src="/images/skkrypto.png" width="90%" height="90%" style="display: flex; margin-left: auto; margin-right: auto; cursor: pointer;">
+                <img  src="/images/skkrypto.png" width="90%" style="display: flex; margin-left: auto; margin-right: auto; cursor: pointer;">
             </a>
         </div>
-        <div class="d-flex" style="width: 85%; background-color: white;">
+
+        <div class="d-flex col-xl-10 col-sm-9" style="background-color: white;">
             <div class="d-flex fluid flex-fill pt-3 px-3 pt-md-4 px-md-4" style="flex-direction: column; ">
                 <div class="row cardi" style="margin-left: 0; margin-right: 0; width: 100%; border: none;" >
                     <div class="d-flex" style="  height: 50px; width: 100%; margin-left: auto; margin-right: auto; color: #3e3a39; font-size: 25px; font-weight: 900;">
