@@ -41,13 +41,23 @@
 <!--</div>-->
 
 <div class="container text-center" style="width : 100%; height: 100%; padding:0px">
-    <video muted autoplay loop width="100%" class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+    <video muted autoplay loop width="100%" id="desk-video">
         <source src="/images/home_video_1.mp4" type="video/mp4">
     </video>
 
-    <video muted autoplay loop playsinline width="1280" height="720" class="d-none d-sm-block d-md-none d-lg-none d-xl-none" srcdesk="/images/home_video_1.mp4" srcmob="/images/home_video_1.mp4">
-        <source src="/images/home_video_1.mp4" type="video/mp4">
+    <video muted autoplay loop width="100%" id="mobile-video" >
+        <source src="/images/home-video-2.mp4" type="video/mp4">
     </video>
+
+    <script type="application/javascript">
+        $(function () {
+            if(window.screen.width >= 768){
+              $('#mobile-video').css('display','none');
+            }else{
+              $('#desk-video').css('display','none');
+            }
+        });
+    </script>
 </div>
 
 </body>
